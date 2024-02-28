@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  postgres:
+    image: "11notes/postgres:16"
+    container_name: "postgres"
+    environment:
+      POSTGRES_PASSWORD: *********
+    ports:
+      - "5432:5432/tcp"
+    volumes:
+      - "var:/postgres/var"
+      - "backup:/postgres/backup"
+volumes:
+  var:
+  backup:
