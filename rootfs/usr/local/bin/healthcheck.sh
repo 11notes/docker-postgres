@@ -1,2 +1,2 @@
 #!/bin/ash
-  pg_isready &>/dev/null
+  pg_isready -U postgres &>/dev/null
