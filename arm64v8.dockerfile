@@ -34,7 +34,7 @@
         postgresql16 \
         postgresql16-contrib; \
       apk --no-cache upgrade; \
-      ln -sf /dev/stdout postgres/log/stdout.json; \
+      ln -sf /dev/stdout /postgres/log/stdout.json; \
       ln -sf /postgres/run /run/postgresql;
 
   # :: set uid/gid to 1000:1000 for existing user

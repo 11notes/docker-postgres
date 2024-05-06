@@ -17,7 +17,6 @@ What can I do with this? This image will run postgres as postgres with the datab
 ```shell
 docker run --name postgres \
   -p 5432:5432/tcp \
-  -v .../etc:/postgres/etc \
   -v .../var:/postgres/var \
   -v .../backup:/postgres/backup \
   -d 11notes/postgres:[tag]
@@ -42,6 +41,7 @@ services:
     volumes:
       - "var:/postgres/var"
       - "backup:/postgres/backup"
+    restart: unless-stopped
 volumes:
   var:
   backup:
@@ -61,6 +61,7 @@ volumes:
 | --- | --- | --- |
 | `TZ` | [Time Zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) | |
 | `DEBUG` | Show debug information | |
+| `POSTGRES_PASSWORD` | password for user postgres |  |
 
 # PARENT IMAGE
 * [11notes/alpine:stable](https://hub.docker.com/r/11notes/alpine)

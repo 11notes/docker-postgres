@@ -10,6 +10,12 @@ services:
     volumes:
       - "var:/postgres/var"
       - "backup:/postgres/backup"
+    networks:
+      - postgres
+    restart: always
 volumes:
   var:
   backup:
+networks:
+  postgres:
+    internal: true
