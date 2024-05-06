@@ -27,8 +27,8 @@
     RUN set -ex; \
       apk --no-cache add \
         lz4 \
-        postgresql16 \
-        postgresql16-contrib; \
+        postgresql15 \
+        postgresql15-contrib; \
       apk --no-cache upgrade; \
       ln -sf /dev/stdout /postgres/log/stdout.json; \
       ln -sf /postgres/run /run/postgresql;
