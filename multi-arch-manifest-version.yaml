@@ -1,0 +1,11 @@
+image: 11notes/postgres:15
+manifests:
+  - image: 11notes/postgres:amd64-15
+    platform:
+      architecture: amd64
+      os: linux
+  - image: 11notes/postgres:arm64v8-15
+    platform:
+      architecture: arm64
+      os: linux
+      variant: v8
