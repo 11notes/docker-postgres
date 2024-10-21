@@ -8,8 +8,9 @@
   fi
 
   if [ -z "${1}" ]; then
-    elevenLogJSON info "starting postgres"
-    set -- postgres --config-file=${APP_ROOT}/etc/default.conf
+    elevenLogJSON info "starting ${APP_NAME} (${APP_VERSION})"
+    set -- postgres \
+      --config-file=${APP_ROOT}/etc/default.conf
   fi
 
   exec "$@"

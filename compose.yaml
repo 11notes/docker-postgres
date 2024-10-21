@@ -1,21 +1,16 @@
-version: "3.8"
 services:
   postgres:
     image: "11notes/postgres:16"
     container_name: "postgres"
     environment:
-      POSTGRES_PASSWORD: *********
+      TZ: "Europe/Zurich"
+      POSTGRES_PASSWORD: "*********"
     ports:
       - "5432:5432/tcp"
     volumes:
       - "var:/postgres/var"
       - "backup:/postgres/backup"
-    networks:
-      - postgres
-    restart: always
+    restart: "always"
 volumes:
   var:
   backup:
-networks:
-  postgres:
-    internal: true

@@ -10,10 +10,11 @@
     git clone https://github.com/11notes/util.git;
 
 # :: Header
-  FROM 11notes/alpine:arm64v8-stable
+  FROM --platform=linux/arm64 11notes/alpine:stable
   COPY --from=qemu /usr/bin/qemu-aarch64-static /usr/bin
   COPY --from=util /util/linux/shell/elevenLogJSON /usr/local/bin
   ENV APP_NAME="postgres"
+  ENV APP_VERSION=16
   ENV APP_ROOT=/postgres
 
 # :: Run
@@ -29,11 +30,11 @@
 
   # :: install applications
     RUN set -ex; \
-      apk --no-cache add \
+      apk --no-cache --update add \
         lz4 \
         postgresql16 \
         postgresql16-contrib; \
-      apk --no-cache upgrade; \
+      apk --no-cache --update upgrade; \
       ln -sf /dev/stdout /postgres/log/stdout.json; \
       ln -sf /postgres/run /run/postgresql;
 
@@ -57,7 +58,7 @@
   VOLUME ["${APP_ROOT}/etc", "${APP_ROOT}/var", "${APP_ROOT}/backup"]
 
 # :: Monitor
-  HEALTHCHECK CMD /usr/local/bin/healthcheck.sh || exit 1
+  HEALTHCHECK --interval=5s --timeout=2s CMD /usr/local/bin/healthcheck.sh || exit 1
 
 # :: Start
   USER docker
