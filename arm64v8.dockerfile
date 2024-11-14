@@ -24,6 +24,7 @@
 		RUN set -ex; \
       mkdir -p ${APP_ROOT}/etc; \
 			mkdir -p ${APP_ROOT}/var; \
+      mkdir -p ${APP_ROOT}/sql; \
       mkdir -p ${APP_ROOT}/backup; \
       mkdir -p ${APP_ROOT}/run; \
       mkdir -p ${APP_ROOT}/log;
@@ -34,7 +35,6 @@
         lz4 \
         postgresql16 \
         postgresql16-contrib; \
-      apk --no-cache --update upgrade; \
       ln -sf /dev/stdout /postgres/log/stdout.json; \
       ln -sf /postgres/run /run/postgresql;
 
@@ -52,10 +52,10 @@
     RUN set -ex; \
       chmod +x -R /usr/local/bin; \
       chown -R 1000:1000 \
-      ${APP_ROOT}
+        ${APP_ROOT}
 
 # :: Volumes
-  VOLUME ["${APP_ROOT}/etc", "${APP_ROOT}/var", "${APP_ROOT}/backup"]
+  VOLUME ["${APP_ROOT}/etc", "${APP_ROOT}/var", "${APP_ROOT}/sql", "${APP_ROOT}/backup"]
 
 # :: Monitor
   HEALTHCHECK --interval=5s --timeout=2s CMD /usr/local/bin/healthcheck.sh || exit 1
