@@ -1,3 +1,4 @@
+name: "postgres"
 services:
   postgres:
     image: "11notes/postgres:16"
@@ -5,7 +6,6 @@ services:
     environment:
       TZ: "Europe/Zurich"
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_SQL_GUACAMOLE: true
     ports:
       - "5432:5432/tcp"
     volumes:

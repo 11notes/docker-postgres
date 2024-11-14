@@ -15,6 +15,29 @@
 * **/postgres/backup** - Directory of backups
 
 # COMPOSE
+```yaml
+name: "postgres"
+services:
+  postgres:
+    image: "11notes/postgres:16"
+    container_name: "postgres"
+    environment:
+      TZ: "Europe/Zurich"
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432/tcp"
+    volumes:
+      - "etc:/postgres/etc"
+      - "var:/postgres/var"
+      - "sql:/postgres/sql"
+      - "backup:/postgres/backup"
+    restart: "always"
+volumes:
+  etc:
+  var:
+  sql:
+  backup:
+```
 
 To take a full backup simply run
 ```shell
