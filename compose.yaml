@@ -11,11 +11,23 @@ services:
     volumes:
       - "etc:/postgres/etc"
       - "var:/postgres/var"
-      - "sql:/postgres/sql"
       - "backup:/postgres/backup"
+      - "cmd:/run/cmd"
     restart: "always"
+
+  cron:
+    image: "11notes/cron:stable"
+    container_name: "cron"
+    environment:
+      TZ: "Europe/Zurich"
+      CRONTAB: |-
+        0 3 * * * cmd /run/cmd/.sock backup > /proc/1/fd/1
+    volumes:
+      - "cmd:/run/cmd"
+    restart: "always"
+
 volumes:
   etc:
   var:
-  sql:
   backup:
+  cmd:

@@ -1,6 +1,11 @@
 #!/bin/ash
-  NAME=$(date -u +"%Y%m%d%H%M%S")
+  if [ -z "${1}" ]; then
+    NAME=$(date -u +"%Y%m%d%H%M%S")
+  else
+    NAME="${1}"
+  fi
+  
   mkdir -p ${APP_ROOT}/backup/${NAME}
-  elevenLogJSON info "starting backup ..."
+  eleven log info "starting backup ..."
   pg_basebackup --compress server-lz4 -D ${APP_ROOT}/backup/${NAME} -cfast -Xfetch -Ft -U postgres &>/dev/null
-  elevenLogJSON info "backup complete, located at ${NAME}"
+  eleven log info "backup complete, located at ${NAME}"

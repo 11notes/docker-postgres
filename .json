@@ -1,0 +1,20 @@
+{
+  "image":"11notes/ente",
+  "name":"ente",
+  "root":"/ente",
+  
+  "semver":{
+    "version":"038692a",
+    "latest":"038692a"
+  },
+
+  "readme":{
+    "description":"Run ente backend server on Alpine for your photos or authenticator app",
+    "parent":{
+      "image":"11notes/alpine:stable"
+    },
+    "built":{
+      "ente/server":"https://github.com/ente-io/ente/tree/main/server"
+    }
+  }
+}
