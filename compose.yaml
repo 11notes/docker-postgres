@@ -16,6 +16,10 @@ services:
     restart: "always"
 
   cron:
+    depends_on:
+      postgres:
+        condition: "service_healthy"
+        restart: true
     image: "11notes/cron:stable"
     container_name: "cron"
     environment:

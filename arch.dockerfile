@@ -38,17 +38,17 @@
 
   # :: prepare image
     RUN set -ex; \
-      eleven mkdir ${APP_ROOT}/{etc,var,sql,backup,run,log}; \
+      eleven mkdir ${APP_ROOT}/{etc,var,sql,backup,log,run}; \
       mkdir -p /run/cmd;
 
   # :: install application
     RUN set -ex; \
       apk --no-cache --update add \
         lz4 \
-        postgresql16 \
-        postgresql16-contrib; \
-      ln -sf /dev/stdout /postgres/log/stdout.json; \
-      ln -sf /postgres/run /run/postgresql;
+        postgresql${APP_VERSION} \
+        postgresql${APP_VERSION}-contrib; \
+      ln -sf /dev/stdout ${APP_ROOT}/log/stdout.json; \
+      ln -sf ${APP_ROOT}/run /run/postgresql;
 
   # :: set uid/gid to 1000:1000 for existing user
     RUN set -ex; \
