@@ -1,0 +1,5 @@
+services:
+  - name: postgres
+    fail: true
+    bin: /bin/ash
+    arguments: ["/usr/local/bin/entrypoint.sh"]

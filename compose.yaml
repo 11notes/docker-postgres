@@ -25,7 +25,7 @@ services:
     environment:
       TZ: "Europe/Zurich"
       CRONTAB: |-
-        0 3 * * * cmd /run/cmd/.sock backup > /proc/1/fd/1
+        0 3 * * * cmd-socket '{"bin":"backup"}' > /proc/1/fd/1
     volumes:
       - "cmd:/run/cmd"
     restart: "always"

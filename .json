@@ -9,7 +9,7 @@
   },
 
   "readme":{
-    "description":"PostgreSQL, as simple and secure as it gets",
+    "description":"PostgreSQL as simple and secure as it gets",
     "parent":{
       "image":"11notes/alpine:stable"
     },

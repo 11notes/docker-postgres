@@ -1,17 +1,11 @@
+ARG APP_UID=1000
+ARG APP_GID=1000
+
 # :: Util
   FROM 11notes/util AS util
 
-# :: Command Socket
-  FROM golang:1.23-alpine AS cmd
-  RUN set -ex; \
-    apk --update --no-cache add \
-      git; \
-    git clone https://github.com/11notes/go-cmd-socket.git; \
-    cd /go/go-cmd-socket; \
-    go build; \
-    mv go-cmd-socket /usr/local/bin/cmd-socket;
-
 # :: Header
+  FROM 11notes/distroless:tini-pm AS tini-pm
   FROM 11notes/alpine:stable
 
   # :: arguments
@@ -28,18 +22,19 @@
     ENV APP_NAME=${APP_NAME}
     ENV APP_VERSION=${APP_VERSION}
     ENV APP_ROOT=${APP_ROOT}
+    ENV TINI_PM_CONFIG=/tini-pm/config.yml
 
   # :: multi-stage
-    COPY --from=util /usr/local/bin/ /usr/local/bin
-    COPY --from=cmd /usr/local/bin/cmd-socket /usr/local/bin
+    COPY --from=util --chown=${APP_UID}:${APP_GID} /usr/local/bin/ /usr/local/bin
+    COPY --from=tini-pm --chown=${APP_UID}:${APP_GID} / /
 
 # :: Run
   USER root
+  RUN eleven printenv;
 
   # :: prepare image
     RUN set -ex; \
-      eleven mkdir ${APP_ROOT}/{etc,var,sql,backup,log,run}; \
-      mkdir -p /run/cmd;
+      eleven mkdir ${APP_ROOT}/{etc,var,sql,backup,log,run};
 
   # :: install application
     RUN set -ex; \
@@ -58,8 +53,8 @@
     COPY ./rootfs /
     RUN set -ex; \
       chmod +x -R /usr/local/bin; \
-      chown -R 1000:1000 \
-        /run/cmd \
+      chown -R ${APP_UID}:${APP_GID} \
+        /tini-pm \
         ${APP_ROOT};
 
 # :: Volumes
@@ -69,4 +64,5 @@
   HEALTHCHECK --interval=5s --timeout=2s CMD pg_isready -U postgres &>/dev/null || exit 1
 
 # :: Start
-  USER docker
+  USER ${APP_UID}:${APP_GID}
+  ENTRYPOINT ["/usr/local/bin/tini-pm", "--socket"]
