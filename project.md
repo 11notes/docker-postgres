@@ -1,6 +1,17 @@
-${{ content_synopsis }} This image will run postgres as postgres with the database postgres and the password you set initially. Why so simple? Because 99.9% of all containers that need postgres, are happy with the default settings, no different dbname, different dbuser, whatever needed. It also adds a simple `backup` command to backup the entire database. This command can be executed on a schedule by using [11notes/cron]/(https://hub.docker.com/r/11notes/cron).
+${{ content_synopsis }} This image will run postgres as postgres with the database postgres and the password you set initially. Why so simple? Because 99.9% of all containers that need postgres, are happy with the default settings, no different dbname, different dbuser, whatever needed. It also adds a simple `backup` command to backup the entire database. This command can be executed on a schedule by using [11notes/cron]/(https://hub.docker.com/r/11notes/cron) automatically. This image is using [tini-pm](https://github.com/11notes/go-tini-pm) as init to start the database process as well as cmd-socket.
 
-This image contains [cmd-socket](https://github.com/11notes/go-cmd-socket) exposed via ```/run/cmd/cmd.sock```, you can mount it to other images to issue commands on this image (like backup schedule) via curl. It uses [tini-pm](https://github.com/11notes/go-tini-pm) to start the postgres and cmd-socket process.
+${{ content_uvp }} Good question! All the other images on the market that do exactly the same don’t do or offer these options:
+
+${{ github:> [!IMPORTANT] }}
+${{ github:> }}* This image runs as 1000:1000 by default, most other images run everything as root
+${{ github:> }}* This image is created via a secure, pinned CI/CD process and immune to upstream attacks, most other images have upstream dependencies that can be exploited
+${{ github:> }}* This image contains a proper health check that verifies the app is actually working, most other images have either no health check or only check if a port is open or ping works
+${{ github:> }}* This image works as read-only, most other images need to write files to the image filesystem
+${{ github:> }}* This image is a lot smaller than most other images
+
+If you value security, simplicity and the ability to interact with the maintainer and developer of an image. Using my images is a great start in that direction.
+
+${{ content_comparison }}
  
 ${{ title_volumes }}
 * **${{ json_root }}/etc** - Directory of config files
