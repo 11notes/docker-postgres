@@ -5,23 +5,31 @@
 
 PostgreSQL as simple and secure as it gets
 
-# MAIN TAGS 🏷️
-These are the main tags for the image. There is also a tag for each commit and its shorthand sha256 value.
-
-* [16](https://hub.docker.com/r/11notes/postgres/tags?name=16)
-* [latest](https://hub.docker.com/r/11notes/postgres/tags?name=latest)
-
-# REPOSITORIES ☁️
-```
-docker pull 11notes/postgres:16
-docker pull ghcr.io/11notes/postgres:16
-docker pull quay.io/11notes/postgres:16
-```
-
 # SYNOPSIS 📖
-**What can I do with this?** This image will run postgres as postgres with the database postgres and the password you set initially. Why so simple? Because 99.9% of all containers that need postgres, are happy with the default settings, no different dbname, different dbuser, whatever needed. It also adds a simple `backup` command to backup the entire database. This command can be executed on a schedule by using [11notes/cron]/(https://hub.docker.com/r/11notes/cron).
+**What can I do with this?** This image will run postgres as postgres with the database postgres and the password you set initially. Why so simple? Because 99.9% of all containers that need postgres, are happy with the default settings, no different dbname, different dbuser, whatever needed. It also adds a simple `backup` command to backup the entire database. This command can be executed on a schedule by using [11notes/cron]/(https://hub.docker.com/r/11notes/cron) automatically. This image is using [tini-pm](https://github.com/11notes/go-tini-pm) as init to start the database process as well as cmd-socket.
 
-This image contains [cmd-socket](https://github.com/11notes/go-cmd-socket) exposed via ```/run/cmd/cmd.sock```, you can mount it to other images to issue commands on this image (like backup schedule) via curl. It uses [tini-pm](https://github.com/11notes/go-tini-pm) to start the postgres and cmd-socket process.
+# UNIQUE VALUE PROPOSITION 💶
+**Why should I run this image and not the other image(s) that already exist?** Good question! All the other images on the market that do exactly the same don’t do or offer these options:
+
+> [!IMPORTANT]
+>* This image runs as 1000:1000 by default, most other images run everything as root
+>* This image is created via a secure, pinned CI/CD process and immune to upstream attacks, most other images have upstream dependencies that can be exploited
+>* This image contains a proper health check that verifies the app is actually working, most other images have either no health check or only check if a port is open or ping works
+>* This image works as read-only, most other images need to write files to the image filesystem
+>* This image is a lot smaller than most other images
+
+If you value security, simplicity and the ability to interact with the maintainer and developer of an image. Using my images is a great start in that direction.
+
+# COMPARISON 🏁
+Below you find a comparison between this image and the most used or original one.
+
+| **image** | 11notes/postgres:16 | postgres:16-alpine |
+| ---: | :---: | :---: |
+| **image size on disk** | 64.3MB | 275MB |
+| **process UID/GID** | 1000/1000 | 0/0 |
+| **distroless?** | ❌ | ❌ |
+| **rootless?** | ✅ | ❌ |
+
  
 # VOLUMES 📁
 * **/postgres/etc** - Directory of config files
@@ -31,9 +39,9 @@ This image contains [cmd-socket](https://github.com/11notes/go-cmd-socket) expos
 ```yaml
 name: "postgres"
 services:
-  postgres:
+  server:
     image: "11notes/postgres:16"
-    container_name: "postgres"
+    read_only: true
     environment:
       TZ: "Europe/Zurich"
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -44,6 +52,10 @@ services:
       - "var:/postgres/var"
       - "backup:/postgres/backup"
       - "cmd:/run/cmd"
+    tmpfs:
+      # needed for read-only file system to work
+      - "/run/postgresql:uid=1000,gid=1000"
+      - "/postgres/log:uid=1000,gid=1000"
     restart: "always"
 
   cron:
@@ -51,10 +63,10 @@ services:
       postgres:
         condition: "service_healthy"
         restart: true
-    image: "11notes/cron:stable"
-    container_name: "cron"
+    image: "11notes/cron:4.6"
     environment:
       TZ: "Europe/Zurich"
+      # run backup every day at 03:00
       CRONTAB: |-
         0 3 * * * cmd-socket '{"bin":"backup"}' > /proc/1/fd/1
     volumes:
@@ -90,6 +102,18 @@ docker exec ${{ IMAGE }} backup
 | `DEBUG` | Will activate debug option for container image and app (if available) | |
 | `POSTGRES_PASSWORD` | password for user postgres |  |
 
+# MAIN TAGS 🏷️
+These are the main tags for the image. There is also a tag for each commit and its shorthand sha256 value.
+
+* [16](https://hub.docker.com/r/11notes/postgres/tags?name=16)
+
+# REGISTRIES ☁️
+```
+docker pull 11notes/postgres:16
+docker pull ghcr.io/11notes/postgres:16
+docker pull quay.io/11notes/postgres:16
+```
+
 # SOURCE 💾
 * [11notes/postgres](https://github.com/11notes/docker-POSTGRES)
 
@@ -108,4 +132,4 @@ docker exec ${{ IMAGE }} backup
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-postgres/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-postgres/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-postgres/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 17.04.2025, 16:20:34 (CET)*
+*created 14.05.2025, 10:13:23 (CET)*
