@@ -33,7 +33,7 @@
         TINI_PM_CONFIG=/tini-pm/config.yml
 
   # :: multi-stage
-    COPY --from=util /usr/local/bin/ /usr/local/bin
+    COPY --from=util /usr/local/bin /usr/local/bin
     COPY --from=tini-pm / /
 
 # :: RUN
@@ -65,11 +65,11 @@
         /tini-pm \
         ${APP_ROOT};
 
-# :: PERSISTENT STORAGE
+# :: STORAGE
   VOLUME ["${APP_ROOT}/etc", "${APP_ROOT}/var"]
 
 # :: HEALTH
-  HEALTHCHECK --interval=5s --timeout=2s \
+  HEALTHCHECK --interval=5s --timeout=2s --start-interval=5s \
     CMD pg_isready -U postgres &>/dev/null
 
 # :: INIT

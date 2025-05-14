@@ -18,6 +18,8 @@
       sleep 5
     fi
     
+    rm -rf ${APP_ROOT}/var/postmaster.pid
+
     set -- postgres \
       --config-file=${APP_ROOT}/etc/default.conf
     eleven log start
