@@ -4,8 +4,7 @@
   "root":"/postgres",
   
   "semver":{
-    "version":"16",
-    "latest":"16"
+    "version":"16"
   },
 
   "readme":{
@@ -15,6 +14,9 @@
     },
     "built":{
       "postgres":"https://github.com/postgres/postgres"
+    },
+    "comparison": {
+      "image": "postgres:16-alpine"
     }
   }
 }
