@@ -7,7 +7,34 @@
 
   # :: FOREIGN IMAGES
   FROM 11notes/util AS util
-  FROM 11notes/distroless:tini-pm AS tini-pm
+  FROM 11notes/util:bin AS util-bin
+  FROM 11notes/distroless:tini-pm AS distroless-tini-pm
+
+# ╔═════════════════════════════════════════════════════╗
+# ║                       BUILD                         ║
+# ╚═════════════════════════════════════════════════════╝
+  # :: backup
+  FROM golang:1.24-alpine AS build
+  COPY --from=util-bin / /
+  COPY ./build /
+  ARG APP_VERSION \
+      BUILD_ROOT=/go/backup \
+      BUILD_BIN=/go/backup/backup \
+      TARGETARCH \
+      TARGETPLATFORM \
+      TARGETVARIANT
+  ENV CGO_ENABLED=0
+
+  RUN set -ex; \
+    cd ${BUILD_ROOT}; \
+    go build -ldflags="-extldflags=-static" -o ${BUILD_BIN} main.go;
+
+  RUN set -ex; \
+    chmod +x ${BUILD_BIN}; \
+    eleven checkStatic ${BUILD_BIN}; \
+    eleven strip ${BUILD_BIN}; \
+    mkdir -p /distroless/usr/local/bin; \
+    cp ${BUILD_BIN} /distroless/usr/local/bin;
 
 
 # ╔═════════════════════════════════════════════════════╗
@@ -33,17 +60,17 @@
         TINI_PM_CONFIG=/tini-pm/config.yml
 
   # :: multi-stage
-    COPY --from=util /usr/local/bin /usr/local/bin
-    COPY --from=tini-pm / /
+    COPY --from=util / /
+    COPY --from=distroless-tini-pm / /
+    COPY --from=build /distroless/ /
 
 # :: RUN
   USER root
-  RUN eleven printenv;
 
   # :: prepare image
     RUN set -ex; \
-      eleven mkdir ${APP_ROOT}/{etc,var,sql,backup,log}; \
-      eleven mkdir /run/{cmd,postgresql};
+      eleven mkdir ${APP_ROOT}/{etc,var,sql,backup,log,run}; \
+      ln -sf ${APP_ROOT}/run /run/postgresql;
 
   # :: install application
     RUN set -ex; \
@@ -70,8 +97,8 @@
 
 # :: HEALTH
   HEALTHCHECK --interval=5s --timeout=2s --start-interval=5s \
-    CMD pg_isready -U postgres &>/dev/null
+    CMD ["pg_isready", "-U", "postgres"]
 
 # :: INIT
   USER ${APP_UID}:${APP_GID}
-  ENTRYPOINT ["/usr/local/bin/tini-pm", "--socket"]
+  ENTRYPOINT ["/usr/local/bin/tini-pm"]

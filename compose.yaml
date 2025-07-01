@@ -6,36 +6,21 @@ services:
     environment:
       TZ: "Europe/Zurich"
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      # make a full and compressed database backup each day at 03:00
+      POSTGRES_BACKUP_SCHEDULE: "0 3 * * *"
     ports:
       - "5432:5432/tcp"
     volumes:
       - "etc:/postgres/etc"
       - "var:/postgres/var"
       - "backup:/postgres/backup"
-      - "cmd:/run/cmd"
     tmpfs:
-      # needed for read-only file system to work
-      - "/run/postgresql:uid=1000,gid=1000"
+      # needed for read-only
+      - "/postgres/run:uid=1000,gid=1000"
       - "/postgres/log:uid=1000,gid=1000"
-    restart: "always"
-
-  cron:
-    depends_on:
-      postgres:
-        condition: "service_healthy"
-        restart: true
-    image: "11notes/cron:4.6"
-    environment:
-      TZ: "Europe/Zurich"
-      # run backup every day at 03:00
-      CRONTAB: |-
-        0 3 * * * cmd-socket '{"bin":"backup"}' > /proc/1/fd/1
-    volumes:
-      - "cmd:/run/cmd"
     restart: "always"
 
 volumes:
   etc:
   var:
   backup:
-  cmd:

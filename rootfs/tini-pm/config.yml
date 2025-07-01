@@ -3,3 +3,8 @@ services:
     fail: true
     bin: /bin/ash
     arguments: ["/usr/local/bin/entrypoint.sh"]
+
+  - name: backup
+    fail: false
+    restart: true
+    bin: /usr/local/bin/backup

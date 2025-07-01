@@ -8,6 +8,14 @@
   fi
 
   if [ -z "${1}" ]; then
+  
+    if [! -z ${POSTGRES_BACKUP_INCREMENTAL} ]; then
+      eleven log info "archive mode active!"
+      sed -i 's/#archive_mode = off/archive_mode = on/' ${APP_ROOT}/etc/default.conf
+    else
+      sed -i 's/archive_mode = on/#archive_mode = off/' ${APP_ROOT}/etc/default.conf
+    fi
+
     if [ ! -z "$(ls -A ${APP_ROOT}/sql)" ]; then
       postgres --config-file=${APP_ROOT}/etc/default.conf &> /dev/null &
       eleven log info "executing SQL scripts ..."
