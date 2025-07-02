@@ -5,6 +5,10 @@
 
 PostgreSQL as simple and secure as it gets
 
+# INTRODUCTION 📢
+
+PostgreSQL is a powerful, open-source, object-relational database management system known for its reliability, feature set, and adherence to standards. It supports both SQL (relational) and JSON (non-relational) querying and is backed by a large, active community.
+
 # SYNOPSIS 📖
 **What can I do with this?** This image will run postgres as postgres with the database postgres and the password you set initially. Why so simple? Because 99.9% of all containers that need postgres, are happy with the default settings, no different dbname, different dbuser, whatever needed. It also adds a simple backup scheduler that will backup your database if ``` POSTGRES_BACKUP_SCHEDULE``` is set. It allows for incremental backups too if enabled.
 
@@ -113,4 +117,4 @@ docker pull quay.io/11notes/postgres:16
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-postgres/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-postgres/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-postgres/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 02.07.2025, 12:08:57 (CET)*
+*created 02.07.2025, 12:12:11 (CET)*
