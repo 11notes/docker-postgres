@@ -6,7 +6,7 @@
 PostgreSQL as simple and secure as it gets
 
 # SYNOPSIS 📖
-**What can I do with this?** This image will run postgres as postgres with the database postgres and the password you set initially. Why so simple? Because 99.9% of all containers that need postgres, are happy with the default settings, no different dbname, different dbuser, whatever needed. It also adds a simple backup scheduler that will backup your database if ``` POSTGRES_BACKUP_SCHEDULE``` is set to a cron.
+**What can I do with this?** This image will run postgres as postgres with the database postgres and the password you set initially. Why so simple? Because 99.9% of all containers that need postgres, are happy with the default settings, no different dbname, different dbuser, whatever needed. It also adds a simple backup scheduler that will backup your database if ``` POSTGRES_BACKUP_SCHEDULE``` is set. It allows for incremental backups too if enabled.
 
 # UNIQUE VALUE PROPOSITION 💶
 **Why should I run this image and not the other image(s) that already exist?** Good question! Because ...
@@ -18,6 +18,7 @@ PostgreSQL as simple and secure as it gets
 >* ... this image is automatically scanned for CVEs before and after publishing
 >* ... this image is created via a secure and pinned CI/CD process
 >* ... this image is very small
+>* ... this image can take full and incremental backups on its own
 
 If you value security, simplicity and optimizations to the extreme, then this image might be for you.
 
@@ -79,6 +80,8 @@ volumes:
 | --- | --- | --- |
 | `TZ` | [Time Zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) | |
 | `DEBUG` | Will activate debug option for container image and app (if available) | |
+| `POSTGRES_BACKUP_SCHEDULE` | Set backup schedule for full backups (crontab style) | |
+| `POSTGRES_BACKUP_INCREMENTAL` | Enable WAL archiving between full backups | |
 
 # MAIN TAGS 🏷️
 These are the main tags for the image. There is also a tag for each commit and its shorthand sha256 value.
@@ -110,4 +113,4 @@ docker pull quay.io/11notes/postgres:16
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-postgres/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-postgres/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-postgres/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 02.07.2025, 10:54:04 (CET)*
+*created 02.07.2025, 12:08:57 (CET)*
