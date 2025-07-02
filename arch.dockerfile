@@ -27,14 +27,10 @@
 
   RUN set -ex; \
     cd ${BUILD_ROOT}; \
-    go build -ldflags="-extldflags=-static" -o ${BUILD_BIN} main.go;
+    eleven go build ${BUILD_BIN} main.go;
 
   RUN set -ex; \
-    chmod +x ${BUILD_BIN}; \
-    eleven checkStatic ${BUILD_BIN}; \
-    eleven strip ${BUILD_BIN}; \
-    mkdir -p /distroless/usr/local/bin; \
-    cp ${BUILD_BIN} /distroless/usr/local/bin;
+    eleven distroless ${BUILD_BIN};
 
 
 # ╔═════════════════════════════════════════════════════╗
