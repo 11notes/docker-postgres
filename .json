@@ -9,6 +9,7 @@
 
   "readme":{
     "description":"PostgreSQL as simple and secure as it gets",
+    "introduction":"PostgreSQL is a powerful, open-source, object-relational database management system known for its reliability, feature set, and adherence to standards. It supports both SQL (relational) and JSON (non-relational) querying and is backed by a large, active community.",
     "parent":{
       "image":"11notes/alpine:stable"
     },
