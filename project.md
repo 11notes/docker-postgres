@@ -23,6 +23,8 @@ ${{ content_compose }}
 ${{ content_defaults }}
 
 ${{ content_environment }}
+| `POSTGRES_BACKUP_SCHEDULE` | Set backup schedule for full backups (crontab style) | |
+| `POSTGRES_BACKUP_INCREMENTAL` | Enable WAL archiving between full backups | |
 
 ${{ content_source }}
 
