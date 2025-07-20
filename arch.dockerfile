@@ -3,27 +3,26 @@
 # ╚═════════════════════════════════════════════════════╝
   # GLOBAL
   ARG APP_UID=1000 \
-      APP_GID=1000
+      APP_GID=1000 \
+      BUILD_ROOT=/go/backup
+  ARG BUILD_BIN=${BUILD_ROOT}/backup
 
   # :: FOREIGN IMAGES
   FROM 11notes/util AS util
-  FROM 11notes/util:bin AS util-bin
   FROM 11notes/distroless:tini-pm AS distroless-tini-pm
 
 # ╔═════════════════════════════════════════════════════╗
 # ║                       BUILD                         ║
 # ╚═════════════════════════════════════════════════════╝
   # :: backup
-  FROM golang:1.24-alpine AS build
-  COPY --from=util-bin / /
+  FROM 11notes/go:1.24 AS build
   COPY ./build /
   ARG APP_VERSION \
-      BUILD_ROOT=/go/backup \
-      BUILD_BIN=/go/backup/backup \
+      BUILD_ROOT \
+      BUILD_BIN \
       TARGETARCH \
       TARGETPLATFORM \
       TARGETVARIANT
-  ENV CGO_ENABLED=0
 
   RUN set -ex; \
     cd ${BUILD_ROOT}; \
@@ -59,34 +58,24 @@
     COPY --from=util / /
     COPY --from=distroless-tini-pm / /
     COPY --from=build /distroless/ /
+    COPY ./rootfs /
 
 # :: RUN
   USER root
 
-  # :: prepare image
-    RUN set -ex; \
-      eleven mkdir ${APP_ROOT}/{etc,var,sql,backup,log,run}; \
-      ln -sf ${APP_ROOT}/run /run/postgresql;
-
-  # :: install application
-    RUN set -ex; \
-      apk --no-cache --update add \
-        lz4 \
-        postgresql${APP_VERSION} \
-        postgresql${APP_VERSION}-contrib; \
-      ln -sf /dev/stdout ${APP_ROOT}/log/stdout.json;
-
-  # :: set uid/gid to 1000:1000 for existing user
-    RUN set -ex; \
-      eleven changeUserToDocker postgres;
-
-  # :: copy filesystem changes and set correct permissions
-    COPY ./rootfs /
-    RUN set -ex; \
-      chmod +x -R /usr/local/bin; \
-      chown -R ${APP_UID}:${APP_GID} \
-        /tini-pm \
-        ${APP_ROOT};
+  RUN set -ex; \
+    eleven mkdir ${APP_ROOT}/{etc,var,sql,backup,log,run}; \
+    ln -sf ${APP_ROOT}/run /run/postgresql; \
+    apk --no-cache --update add \
+      lz4 \
+      postgresql${APP_VERSION} \
+      postgresql${APP_VERSION}-contrib; \
+    ln -sf /dev/stdout ${APP_ROOT}/log/stdout.json; \
+    eleven changeUserToDocker postgres; \
+    chmod +x -R /usr/local/bin; \
+    chown -R ${APP_UID}:${APP_GID} \
+      /tini-pm \
+      ${APP_ROOT};
 
 # :: STORAGE
   VOLUME ["${APP_ROOT}/etc", "${APP_ROOT}/var"]
