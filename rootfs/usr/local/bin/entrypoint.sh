@@ -8,8 +8,8 @@
   fi
 
   if [ -z "${1}" ]; then
-  
-    if [! -z ${POSTGRES_BACKUP_INCREMENTAL} ]; then
+
+    if [ ! -z "${POSTGRES_BACKUP_INCREMENTAL}" ]; then
       eleven log info "archive mode active!"
       sed -i 's/#archive_mode = off/archive_mode = on/' ${APP_ROOT}/etc/default.conf
     else
@@ -25,7 +25,7 @@
       rm -rf ${APP_ROOT}/sql/*
       sleep 5
     fi
-    
+
     rm -rf ${APP_ROOT}/var/postmaster.pid
 
     set -- postgres \
