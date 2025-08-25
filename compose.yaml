@@ -1,6 +1,6 @@
-name: "postgres"
+name: "db"
 services:
-  server:
+  postgres:
     image: "11notes/postgres:16"
     read_only: true
     environment:
@@ -10,10 +10,12 @@ services:
       POSTGRES_BACKUP_SCHEDULE: "0 3 * * *"
     ports:
       - "5432:5432/tcp"
+    networks:
+      frontend:
     volumes:
-      - "etc:/postgres/etc"
-      - "var:/postgres/var"
-      - "backup:/postgres/backup"
+      - "postgres.etc:/postgres/etc"
+      - "postgres.var:/postgres/var"
+      - "postgres.backup:/postgres/backup"
     tmpfs:
       # needed for read-only
       - "/postgres/run:uid=1000,gid=1000"
@@ -21,6 +23,9 @@ services:
     restart: "always"
 
 volumes:
-  etc:
-  var:
-  backup:
+  postgres.etc:
+  postgres.var:
+  postgres.backup:
+
+networks:
+  frontend:
