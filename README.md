@@ -31,7 +31,7 @@ Below you find a comparison between this image and the most used or original one
 
 | **image** | **size on disk** | **init default as** | **[distroless](https://github.com/11notes/RTFM/blob/main/linux/container/image/distroless.md)** | supported architectures
 | ---: | ---: | :---: | :---: | :---: |
-| 11notes/postgres:16 | 55MB | 1000:1000 | ❌ | amd64, arm64 |
+| 11notes/postgres:16 | 46MB | 1000:1000 | ❌ | armv7, arm64, amd64 |
 | postgres:16-alpine | 276MB | 0:0 | ❌ | amd64, armv6, armv7, arm64v8, 386, ppc64le, riscv64, s390x |
  
 # VOLUMES 📁
@@ -87,7 +87,6 @@ networks:
 | `TZ` | [Time Zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) | |
 | `DEBUG` | Will activate debug option for container image and app (if available) | |
 | `POSTGRES_BACKUP_SCHEDULE` | Set backup schedule for full backups (crontab style) | |
-| `POSTGRES_BACKUP_INCREMENTAL` | Enable WAL archiving between full backups | |
 
 # MAIN TAGS 🏷️
 These are the main tags for the image. There is also a tag for each commit and its shorthand sha256 value.
@@ -119,4 +118,4 @@ docker pull quay.io/11notes/postgres:16
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-postgres/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-postgres/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-postgres/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 25.08.2025, 09:02:59 (CET)*
+*created 25.08.2025, 09:44:59 (CET)*
