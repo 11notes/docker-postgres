@@ -1,21 +1,21 @@
 # ╔═════════════════════════════════════════════════════╗
 # ║                       SETUP                         ║
 # ╚═════════════════════════════════════════════════════╝
-  # GLOBAL
+# GLOBAL
   ARG APP_UID=1000 \
       APP_GID=1000 \
       BUILD_ROOT=/go/backup
   ARG BUILD_BIN=${BUILD_ROOT}/backup
 
-  # :: FOREIGN IMAGES
+# :: FOREIGN IMAGES
   FROM 11notes/util AS util
   FROM 11notes/distroless:tini-pm AS distroless-tini-pm
 
 # ╔═════════════════════════════════════════════════════╗
 # ║                       BUILD                         ║
 # ╚═════════════════════════════════════════════════════╝
-  # :: backup
-  FROM 11notes/go:1.24 AS build
+# :: BACKUP
+  FROM 11notes/go:1.25 AS build
   COPY ./build /
   ARG APP_VERSION \
       BUILD_ROOT \
@@ -35,7 +35,7 @@
 # ╔═════════════════════════════════════════════════════╗
 # ║                       IMAGE                         ║
 # ╚═════════════════════════════════════════════════════╝
-  # :: HEADER
+# :: HEADER
   FROM 11notes/alpine:stable
 
   # :: arguments
@@ -67,6 +67,8 @@
     eleven mkdir ${APP_ROOT}/{etc,var,sql,backup,log,run}; \
     ln -sf ${APP_ROOT}/run /run/postgresql; \
     apk --no-cache --update add \
+      cmd:usermod \
+      cmd:groupmod \
       lz4 \
       postgresql${APP_VERSION} \
       postgresql${APP_VERSION}-contrib; \
@@ -75,7 +77,8 @@
     chmod +x -R /usr/local/bin; \
     chown -R ${APP_UID}:${APP_GID} \
       /tini-pm \
-      ${APP_ROOT};
+      ${APP_ROOT}; \
+    apk del cmd:usermod cmd:groupmod;
 
 # :: STORAGE
   VOLUME ["${APP_ROOT}/etc", "${APP_ROOT}/var"]
