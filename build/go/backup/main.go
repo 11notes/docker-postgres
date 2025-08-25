@@ -11,6 +11,8 @@ import (
 	"io"
 	"github.com/go-co-op/gocron/v2"
 	"strings"
+
+	"github.com/11notes/go/util"
 )
 
 const SCHEDULE = "POSTGRES_BACKUP_SCHEDULE"
@@ -26,14 +28,14 @@ func main(){
 
 	// set backup schedule
 	if _, ok := os.LookupEnv(SCHEDULE); ok {
-		fmt.Fprintf(os.Stdout, "setting schedule: %s\n", os.Getenv(SCHEDULE))
+		util.Log("inf", "setting schedule: " + os.Getenv(SCHEDULE))
 		scheduler, err := gocron.NewScheduler()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "cron error: %s\n", err)
+			util.Log("err", "cron error: " + err.Error())
 		}
 		_, err = scheduler.NewJob(gocron.CronJob(os.Getenv(SCHEDULE), false), gocron.NewTask(backup))
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "cron error: %s\n", err)
+			util.Log("err", "cron error: " + err.Error())
 		}
 		scheduler.Start()
 	}
@@ -61,23 +63,30 @@ func backup(){
 			for stdoutScanner.Scan() {
 				stdout := stdoutScanner.Text()
 				if ! strings.HasPrefix(stdout, "WARNING:  skipping special file"){
-					fmt.Println(stdout)
+					util.Log("inf", stdout)
 				}
 			}
 		}()
 
 		// start backup process
 		err := cmd.Start()
-		fmt.Printf("starting backup to [%s/base.tar.lz4]\n", backupPath)
+		util.Log("inf", fmt.Sprintf("starting backup to [%s/base.tar.lz4]\n", backupPath))
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "backup error: %s\n", err)
-		}
-
-		err = cmd.Wait()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "backup error: %s\n", err)
+			util.Log("err", "backup error: " + err.Error())
+		}else{
+			err = cmd.Wait()
+			if err != nil {
+				util.Log("err", "backup error: " + err.Error())
+			}else{
+				// backup complete
+				if _, err := os.Stat(fmt.Sprintf("%s/%s", backupPath, "base.tar.lz4")); !os.IsNotExist(err){
+					util.Log("inf", "backup complete")
+				}else{
+					util.Log("err", "backup error: " + err.Error())
+				}
+			}
 		}
 	}else{
-		fmt.Fprintf(os.Stderr, "backup error: target %s exists already\n", backupPath)
+		util.Log("err", fmt.Sprintf("backup error: target %s exists already\n", backupPath))
 	}
 }
