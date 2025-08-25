@@ -29,13 +29,10 @@ If you value security, simplicity and optimizations to the extreme, then this im
 # COMPARISON 🏁
 Below you find a comparison between this image and the most used or original one.
 
-| **image** | 11notes/postgres:16 | postgres:16-alpine |
-| ---: | :---: | :---: |
-| **image size on disk** | 55.9MB | 276MB |
-| **process UID/GID** | 1000/1000 | 0/0 |
-| **distroless?** | ❌ | ❌ |
-| **rootless?** | ✅ | ❌ |
-
+| **image** | **size on disk** | **init default as** | **[distroless](https://github.com/11notes/RTFM/blob/main/linux/container/image/distroless.md)** | supported architectures
+| ---: | ---: | :---: | :---: | :---: |
+| 11notes/postgres:16 | 55MB | 1000:1000 | ❌ | amd64, arm64 |
+| postgres:16-alpine | 276MB | 0:0 | ❌ | amd64, armv6, armv7, arm64v8, 386, ppc64le, riscv64, s390x |
  
 # VOLUMES 📁
 * **/postgres/etc** - Directory of config files
@@ -43,9 +40,9 @@ Below you find a comparison between this image and the most used or original one
 
 # COMPOSE ✂️
 ```yaml
-name: "postgres"
+name: "db"
 services:
-  server:
+  postgres:
     image: "11notes/postgres:16"
     read_only: true
     environment:
@@ -55,10 +52,12 @@ services:
       POSTGRES_BACKUP_SCHEDULE: "0 3 * * *"
     ports:
       - "5432:5432/tcp"
+    networks:
+      frontend:
     volumes:
-      - "etc:/postgres/etc"
-      - "var:/postgres/var"
-      - "backup:/postgres/backup"
+      - "postgres.etc:/postgres/etc"
+      - "postgres.var:/postgres/var"
+      - "postgres.backup:/postgres/backup"
     tmpfs:
       # needed for read-only
       - "/postgres/run:uid=1000,gid=1000"
@@ -66,9 +65,12 @@ services:
     restart: "always"
 
 volumes:
-  etc:
-  var:
-  backup:
+  postgres.etc:
+  postgres.var:
+  postgres.backup:
+
+networks:
+  frontend:
 ```
 
 # DEFAULT SETTINGS 🗃️
@@ -117,4 +119,4 @@ docker pull quay.io/11notes/postgres:16
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-postgres/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-postgres/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-postgres/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 20.07.2025, 12:23:34 (CET)*
+*created 25.08.2025, 09:02:59 (CET)*
