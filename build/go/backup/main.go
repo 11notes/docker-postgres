@@ -70,7 +70,7 @@ func backup(){
 
 		// start backup process
 		err := cmd.Start()
-		util.Log("inf", fmt.Sprintf("starting backup to [%s/base.tar.lz4]\n", backupPath))
+		util.Log("inf", fmt.Sprintf("starting backup to %s/base.tar.lz4", backupPath))
 		if err != nil {
 			util.Log("err", "backup error: " + err.Error())
 		}else{
