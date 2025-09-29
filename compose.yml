@@ -1,7 +1,7 @@
 name: "db"
 services:
   postgres:
-    image: "11notes/postgres:16"
+    image: "11notes/postgres:17"
     read_only: true
     environment:
       TZ: "Europe/Zurich"
