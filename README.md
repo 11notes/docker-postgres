@@ -88,6 +88,7 @@ To find out how you can change the default UID/GID of this container image, cons
 | `TZ` | [Time Zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) | |
 | `DEBUG` | Will activate debug option for container image and app (if available) | |
 | `POSTGRES_BACKUP_SCHEDULE` | Set backup schedule for full backups (crontab style) | |
+| `POSTGRES_BACKUP_RETENTION` | Set backup retention points to keep | 0 (disabled) |
 
 # MAIN TAGS 🏷️
 These are the main tags for the image. There is also a tag for each commit and its shorthand sha256 value.
@@ -119,4 +120,4 @@ docker pull quay.io/11notes/postgres:17
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-postgres/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-postgres/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-postgres/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 29.09.2025, 11:40:50 (CET)*
+*created 30.09.2025, 15:35:47 (CET)*
