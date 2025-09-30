@@ -1,7 +1,7 @@
 ![banner](https://github.com/11notes/defaults/blob/main/static/img/banner.png?raw=true)
 
 # POSTGRES
-![size](https://img.shields.io/docker/image-size/11notes/postgres/16?color=0eb305)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![version](https://img.shields.io/docker/v/11notes/postgres/16?color=eb7a09)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![pulls](https://img.shields.io/docker/pulls/11notes/postgres?color=2b75d6)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)[<img src="https://img.shields.io/github/issues/11notes/docker-POSTGRES?color=7842f5">](https://github.com/11notes/docker-POSTGRES/issues)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![swiss_made](https://img.shields.io/badge/Swiss_Made-FFFFFF?labelColor=FF0000&logo=data:image/svg%2bxml;base64,PHN2ZyB2ZXJzaW9uPSIxIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDMyIDMyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0idHJhbnNwYXJlbnQiLz4KICA8cGF0aCBkPSJtMTMgNmg2djdoN3Y2aC03djdoLTZ2LTdoLTd2LTZoN3oiIGZpbGw9IiNmZmYiLz4KPC9zdmc+)
+![size](https://img.shields.io/docker/image-size/11notes/postgres/17?color=0eb305)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![version](https://img.shields.io/docker/v/11notes/postgres/17?color=eb7a09)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![pulls](https://img.shields.io/docker/pulls/11notes/postgres?color=2b75d6)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)[<img src="https://img.shields.io/github/issues/11notes/docker-POSTGRES?color=7842f5">](https://github.com/11notes/docker-POSTGRES/issues)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![swiss_made](https://img.shields.io/badge/Swiss_Made-FFFFFF?labelColor=FF0000&logo=data:image/svg%2bxml;base64,PHN2ZyB2ZXJzaW9uPSIxIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDMyIDMyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0idHJhbnNwYXJlbnQiLz4KICA8cGF0aCBkPSJtMTMgNmg2djdoN3Y2aC03djdoLTZ2LTdoLTd2LTZoN3oiIGZpbGw9IiNmZmYiLz4KPC9zdmc+)
 
 PostgreSQL as simple and secure as it gets
 
@@ -31,8 +31,8 @@ Below you find a comparison between this image and the most used or original one
 
 | **image** | **size on disk** | **init default as** | **[distroless](https://github.com/11notes/RTFM/blob/main/linux/container/image/distroless.md)** | supported architectures
 | ---: | ---: | :---: | :---: | :---: |
-| 11notes/postgres:16 | 46MB | 1000:1000 | ❌ | amd64, arm64, armv7 |
-| postgres:16-alpine | 276MB | 0:0 | ❌ | amd64, armv6, armv7, arm64v8, 386, ppc64le, riscv64, s390x |
+| 11notes/postgres:17 | 47MB | 1000:1000 | ❌ | amd64, arm64, armv7 |
+| postgres:17-alpine | 284MB | 0:0 | ❌ | 386, amd64, arm64v8, armv6, armv7, ppc64le, riscv64, s390x |
  
 # VOLUMES 📁
 * **/postgres/etc** - Directory of config files
@@ -43,7 +43,7 @@ Below you find a comparison between this image and the most used or original one
 name: "db"
 services:
   postgres:
-    image: "11notes/postgres:16"
+    image: "11notes/postgres:17"
     read_only: true
     environment:
       TZ: "Europe/Zurich"
@@ -72,6 +72,7 @@ volumes:
 networks:
   frontend:
 ```
+To find out how you can change the default UID/GID of this container image, consult the [how-to.changeUIDGID](https://github.com/11notes/RTFM/blob/main/linux/container/image/11notes/how-to.changeUIDGID.md#change-uidgid-the-correct-way) section of my [RTFM](https://github.com/11notes/RTFM)
 
 # DEFAULT SETTINGS 🗃️
 | Parameter | Value | Description |
@@ -91,13 +92,13 @@ networks:
 # MAIN TAGS 🏷️
 These are the main tags for the image. There is also a tag for each commit and its shorthand sha256 value.
 
-* [16](https://hub.docker.com/r/11notes/postgres/tags?name=16)
+* [17](https://hub.docker.com/r/11notes/postgres/tags?name=17)
 
 # REGISTRIES ☁️
 ```
-docker pull 11notes/postgres:16
-docker pull ghcr.io/11notes/postgres:16
-docker pull quay.io/11notes/postgres:16
+docker pull 11notes/postgres:17
+docker pull ghcr.io/11notes/postgres:17
+docker pull quay.io/11notes/postgres:17
 ```
 
 # SOURCE 💾
@@ -118,4 +119,4 @@ docker pull quay.io/11notes/postgres:16
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-postgres/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-postgres/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-postgres/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 26.08.2025, 00:58:58 (CET)*
+*created 29.09.2025, 11:40:50 (CET)*
