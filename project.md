@@ -25,6 +25,7 @@ ${{ content_defaults }}
 
 ${{ content_environment }}
 | `POSTGRES_BACKUP_SCHEDULE` | Set backup schedule for full backups (crontab style) | |
+| `POSTGRES_BACKUP_RETENTION` | Set backup retention points to keep | 0 (disabled) |
 
 ${{ content_source }}
 

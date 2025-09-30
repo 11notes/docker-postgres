@@ -11,11 +11,18 @@ import (
 	"io"
 	"github.com/go-co-op/gocron/v2"
 	"strings"
+	"strconv"
+	"slices"
 
 	"github.com/11notes/go/util"
 )
 
 const SCHEDULE = "POSTGRES_BACKUP_SCHEDULE"
+const RETENTION = "POSTGRES_BACKUP_RETENTION"
+
+var (
+	retentionPoints int = 0
+)
 
 func main(){
 	// catch syscalls
@@ -38,6 +45,17 @@ func main(){
 			util.Log("err", "cron error: " + err.Error())
 		}
 		scheduler.Start()
+	}
+
+	// set retention
+	if s, ok := os.LookupEnv(RETENTION); ok {
+		if i, err := strconv.Atoi(s); err == nil {
+			retentionPoints = i
+			util.Log("inf", fmt.Sprintf("setting retention to last %d point(s)", retentionPoints))
+		}
+	}
+	if(retentionPoints <= 0){
+		util.Log("inf", "disable retention")
 	}
 
 	// wait for schedule to execute
@@ -70,7 +88,6 @@ func backup(){
 
 		// start backup process
 		err := cmd.Start()
-		util.Log("inf", fmt.Sprintf("starting backup to %s/base.tar.lz4", backupPath))
 		if err != nil {
 			util.Log("err", "backup error: " + err.Error())
 		}else{
@@ -80,13 +97,49 @@ func backup(){
 			}else{
 				// backup complete
 				if _, err := os.Stat(fmt.Sprintf("%s/%s", backupPath, "base.tar.lz4")); !os.IsNotExist(err){
-					util.Log("inf", "backup complete")
+					util.Log("inf", fmt.Sprintf("backup to %s complete", backupPath))
+					if(retentionPoints > 0){
+						retention()
+					}
 				}else{
 					util.Log("err", "backup error: " + err.Error())
 				}
 			}
 		}
 	}else{
-		util.Log("err", fmt.Sprintf("backup error: target %s exists already\n", backupPath))
+		util.Log("err", fmt.Sprintf("backup error: target %s exists already", backupPath))
+	}
+}
+
+func retention(){
+	ls, err := os.ReadDir("/postgres/backup")
+	if err != nil {
+		util.Log("err", "retention error: " + err.Error())
+	}else{
+		var backups []string
+		for _, e := range ls {
+			if e.IsDir() {
+				backups = append(backups, "/postgres/backup/" + e.Name())
+			}
+		}
+		slices.Sort(backups)
+		slices.Reverse(backups)
+		if(len(backups) > 0){
+			if(len(backups) > retentionPoints){
+				// check retention settings
+				keep := backups[0:retentionPoints]
+				util.Log("inf", fmt.Sprintf("backup(s) in retention [%d]: %v", len(keep), keep))
+				remove := backups[retentionPoints:]
+				if(len(remove) > 0){
+					for _, backup := range remove {
+						os.RemoveAll(backup)
+					}
+					util.Log("inf", fmt.Sprintf("backups deleted [%d]: %v", len(remove), remove))
+				}
+			}else{
+				// no retention needed
+				util.Log("inf", fmt.Sprintf("backup(s) in retention [%d]: %v", len(backups), backups))
+			}
+		}
 	}
 }
