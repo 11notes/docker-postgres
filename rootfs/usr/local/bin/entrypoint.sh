@@ -18,7 +18,7 @@
       rm -rf ${APP_ROOT}/sql/*
       sleep 5
     fi
-    
+
     rm -rf ${APP_ROOT}/var/postmaster.pid
 
     set -- postgres \
