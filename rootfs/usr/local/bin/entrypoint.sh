@@ -1,7 +1,18 @@
 #!/bin/ash
   if [ -z "$(ls -A ${APP_ROOT}/var)" ]; then
     eleven log info "creating new database"
-    initdb --username=postgres --pwfile=<(printf "%s\n" "${POSTGRES_PASSWORD}") --pgdata ${APP_ROOT}/var &>/dev/null
+
+    # Determine password
+    if [ -n "${POSTGRES_PASSWORD_FILE:-}" ] && [ -f "$POSTGRES_PASSWORD_FILE" ]; then
+        DB_PASSWORD="$(cat "$POSTGRES_PASSWORD_FILE")"
+    elif [ -n "${POSTGRES_PASSWORD:-}" ]; then
+        DB_PASSWORD="$POSTGRES_PASSWORD"
+    else
+        eleven log error "No POSTGRES_PASSWORD or POSTGRES_PASSWORD_FILE provided"
+        exit 1
+    fi
+
+    initdb --username=postgres --pwfile=<(printf "%s\n" "$DB_PASSWORD") --pgdata "${APP_ROOT}/var" &>/dev/null
     ln -sf ${APP_ROOT}/etc/default.conf ${APP_ROOT}/var/postgresql.conf
   else
     eleven log info "loading existing database"
