@@ -47,7 +47,7 @@ services:
     read_only: true
     environment:
       TZ: "Europe/Zurich"
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
       # make a full and compressed database backup each day at 03:00
       POSTGRES_BACKUP_SCHEDULE: "0 3 * * *"
     ports:
@@ -63,6 +63,10 @@ services:
       - "/postgres/run:uid=1000,gid=1000"
       - "/postgres/log:uid=1000,gid=1000"
     restart: "always"
+
+secrets:
+  postgres_password:
+    file: /secrets/postgres_password
 
 volumes:
   postgres.etc:
