@@ -24,8 +24,10 @@ ${{ content_compose }}
 ${{ content_defaults }}
 
 ${{ content_environment }}
-| `POSTGRES_BACKUP_SCHEDULE` | Set backup schedule for full backups (crontab style) | |
-| `POSTGRES_BACKUP_RETENTION` | Set backup retention points to keep | 0 (disabled) |
+| `POSTGRES_PASSWORD` | Password for the postgres user |  |
+| `POSTGRES_PASSWORD_FILE` *(optional)* | Secrets file containing the password for the postgres user (check [compose.secrets.yml](https://github.com/11notes/docker-postgres/blob/master/compose.secrets.yml)) |  |
+| `POSTGRES_BACKUP_SCHEDULE` *(optional)* | Set backup schedule for full backups (crontab style) | |
+| `POSTGRES_BACKUP_RETENTION` *(optional)* | Set backup retention points to keep | 0 (disabled) |
 
 ${{ content_source }}
 

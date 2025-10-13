@@ -4,3 +4,4 @@ node_modules/
 
 # custom
 .env
+postgres.txt

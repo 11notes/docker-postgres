@@ -1,4 +1,9 @@
 #!/bin/ash
+  if [ -f "${POSTGRES_PASSWORD_FILE}" ]; then
+    POSTGRES_PASSWORD=$(cat ${POSTGRES_PASSWORD})
+    eleven log info "using secrets file for password"
+  fi
+
   if [ -z "$(ls -A ${APP_ROOT}/var)" ]; then
     eleven log info "creating new database"
     initdb --username=postgres --pwfile=<(printf "%s\n" "${POSTGRES_PASSWORD}") --pgdata ${APP_ROOT}/var &>/dev/null
