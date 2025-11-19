@@ -1,4 +1,6 @@
-${{ content_synopsis }} This image will run postgres as postgres with the database postgres and the password you set initially. Why so simple? Because 99.9% of all containers that need postgres, are happy with the default settings, no different dbname, different dbuser, whatever needed. It also adds a simple backup scheduler that will backup your database if ``` POSTGRES_BACKUP_SCHEDULE``` is set. It allows for incremental backups too if enabled.
+${{ content_synopsis }} This image will run postgres as postgres with the database postgres and the password you set initially. Why so simple? Because 99.9% of all containers that need postgres, are happy with the default settings, no different dbname, different dbuser, whatever needed. It also adds a simple backup scheduler that will backup your database if ```POSTGRES_BACKUP_SCHEDULE``` is set. It allows for incremental backups too if enabled.
+
+**Supported PostgreSQL versions:** 15, 16, 17 and 18
 
 ${{ content_uvp }} Good question! Because ...
 
