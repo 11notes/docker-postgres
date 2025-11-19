@@ -4,11 +4,11 @@
   "root":"/postgres",
   
   "semver":{
-    "version":"17"
+    "version":"18"
   },
 
   "readme":{
-    "description":"PostgreSQL as simple and secure as it gets",
+    "description":"run PostgeSQL rootless",
     "introduction":"PostgreSQL is a powerful, open-source, object-relational database management system known for its reliability, feature set, and adherence to standards. It supports both SQL (relational) and JSON (non-relational) querying and is backed by a large, active community.",
     "parent":{
       "image":"11notes/alpine:stable"
@@ -17,7 +17,7 @@
       "postgres":"https://github.com/postgres/postgres"
     },
     "comparison": {
-      "image": "postgres:17-alpine"
+      "image": "postgres:18-alpine"
     }
   }
 }

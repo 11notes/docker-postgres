@@ -9,7 +9,7 @@ x-lockdown: &lockdown
 
 services:
   postgres:
-    image: "11notes/postgres:17"
+    image: "11notes/postgres:18"
     <<: *lockdown
     environment:
       TZ: "Europe/Zurich"

@@ -66,7 +66,7 @@
   RUN set -ex; \
     eleven mkdir ${APP_ROOT}/{etc,var,sql,backup,log,run}; \
     ln -sf ${APP_ROOT}/run /run/postgresql; \
-    apk --no-cache --update add \
+    apk --no-cache --update add --repository=https://dl-cdn.alpinelinux.org/alpine/edge/main \
       cmd:usermod \
       cmd:groupmod \
       lz4 \
