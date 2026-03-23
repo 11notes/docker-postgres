@@ -1,16 +1,18 @@
-![banner](https://github.com/11notes/defaults/blob/main/static/img/banner.png?raw=true)
+![banner](https://raw.githubusercontent.com/11notes/static/refs/heads/main/img/banner/README.png)
 
 # POSTGRES
-![size](https://img.shields.io/docker/image-size/11notes/postgres/17?color=0eb305)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![version](https://img.shields.io/docker/v/11notes/postgres/17?color=eb7a09)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![pulls](https://img.shields.io/docker/pulls/11notes/postgres?color=2b75d6)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)[<img src="https://img.shields.io/github/issues/11notes/docker-POSTGRES?color=7842f5">](https://github.com/11notes/docker-POSTGRES/issues)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![swiss_made](https://img.shields.io/badge/Swiss_Made-FFFFFF?labelColor=FF0000&logo=data:image/svg%2bxml;base64,PHN2ZyB2ZXJzaW9uPSIxIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDMyIDMyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0idHJhbnNwYXJlbnQiLz4KICA8cGF0aCBkPSJtMTMgNmg2djdoN3Y2aC03djdoLTZ2LTdoLTd2LTZoN3oiIGZpbGw9IiNmZmYiLz4KPC9zdmc+)
+![size](https://img.shields.io/badge/image_size-49MB-green?color=%2338ad2d)![5px](https://raw.githubusercontent.com/11notes/static/refs/heads/main/img/markdown/transparent5x2px.png)![pulls](https://img.shields.io/docker/pulls/11notes/postgres?color=2b75d6)![5px](https://raw.githubusercontent.com/11notes/static/refs/heads/main/img/markdown/transparent5x2px.png)[<img src="https://img.shields.io/github/issues/11notes/docker-postgres?color=7842f5">](https://github.com/11notes/docker-postgres/issues)![5px](https://raw.githubusercontent.com/11notes/static/refs/heads/main/img/markdown/transparent5x2px.png)![swiss_made](https://img.shields.io/badge/Swiss_Made-FFFFFF?labelColor=FF0000&logo=data:image/svg%2bxml;base64,PHN2ZyB2ZXJzaW9uPSIxIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDMyIDMyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0idHJhbnNwYXJlbnQiLz4KICA8cGF0aCBkPSJtMTMgNmg2djdoN3Y2aC03djdoLTZ2LTdoLTd2LTZoN3oiIGZpbGw9IiNmZmYiLz4KPC9zdmc+)
 
-PostgreSQL as simple and secure as it gets
+run PostgeSQL rootless
 
 # INTRODUCTION 📢
 
 PostgreSQL is a powerful, open-source, object-relational database management system known for its reliability, feature set, and adherence to standards. It supports both SQL (relational) and JSON (non-relational) querying and is backed by a large, active community.
 
 # SYNOPSIS 📖
-**What can I do with this?** This image will run postgres as postgres with the database postgres and the password you set initially. Why so simple? Because 99.9% of all containers that need postgres, are happy with the default settings, no different dbname, different dbuser, whatever needed. It also adds a simple backup scheduler that will backup your database if ``` POSTGRES_BACKUP_SCHEDULE``` is set. It allows for incremental backups too if enabled.
+**What can I do with this?** This image will run postgres as postgres with the database postgres and the password you set initially. Why so simple? Because 99.9% of all containers that need postgres, are happy with the default settings, no different dbname, different dbuser, whatever needed. It also adds a simple backup scheduler that will backup your database if ```POSTGRES_BACKUP_SCHEDULE``` is set. It allows for incremental backups too if enabled.
+
+**Supported PostgreSQL versions:** 15, 16, 17 and 18
 
 # UNIQUE VALUE PROPOSITION 💶
 **Why should I run this image and not the other image(s) that already exist?** Good question! Because ...
@@ -31,14 +33,15 @@ Below you find a comparison between this image and the most used or original one
 
 | **image** | **size on disk** | **init default as** | **[distroless](https://github.com/11notes/RTFM/blob/main/linux/container/image/distroless.md)** | supported architectures
 | ---: | ---: | :---: | :---: | :---: |
-| 11notes/postgres:17 | 47MB | 1000:1000 | ❌ | amd64, arm64, armv7 |
-| postgres:17-alpine | 278MB | 0:0 | ❌ | 386, amd64, arm64v8, armv6, armv7, ppc64le, riscv64, s390x |
+| 11notes/postgres | 49MB | 1000:1000 | ❌ | amd64, arm64, armv7 |
+| postgres | 280MB | 0:0 | ❌ | 386, amd64, arm64v8, armv6, armv7, ppc64le, riscv64, s390x |
  
 # VOLUMES 📁
 * **/postgres/etc** - Directory of config files
 * **/postgres/var** - Directory of database files
 
 # COMPOSE ✂️
+Checkout [compose.secrets.yml](https://github.com/11notes/docker-postgres/blob/master/compose.secrets.yml) if you want to use secrets instead of environment variables.
 ```yaml
 name: "db"
 
@@ -51,7 +54,7 @@ x-lockdown: &lockdown
 
 services:
   postgres:
-    image: "11notes/postgres:17"
+    image: "11notes/postgres:18"
     <<: *lockdown
     environment:
       TZ: "Europe/Zurich"
@@ -82,7 +85,7 @@ volumes:
 networks:
   frontend:
 ```
-To find out how you can change the default UID/GID of this container image, consult the [how-to.changeUIDGID](https://github.com/11notes/RTFM/blob/main/linux/container/image/11notes/how-to.changeUIDGID.md#change-uidgid-the-correct-way) section of my [RTFM](https://github.com/11notes/RTFM)
+To find out how you can change the default UID/GID of this container image, consult the [RTFM](https://github.com/11notes/RTFM/blob/main/linux/container/image/11notes/how-to.changeUIDGID.md#change-uidgid-the-correct-way).
 
 # DEFAULT SETTINGS 🗃️
 | Parameter | Value | Description |
@@ -105,17 +108,17 @@ To find out how you can change the default UID/GID of this container image, cons
 # MAIN TAGS 🏷️
 These are the main tags for the image. There is also a tag for each commit and its shorthand sha256 value.
 
-* [17](https://hub.docker.com/r/11notes/postgres/tags?name=17)
+* [18](https://hub.docker.com/r/11notes/postgres/tags?name=18)
 
 # REGISTRIES ☁️
 ```
-docker pull 11notes/postgres:17
-docker pull ghcr.io/11notes/postgres:17
-docker pull quay.io/11notes/postgres:17
+docker pull 11notes/postgres:18
+docker pull ghcr.io/11notes/postgres:18
+docker pull quay.io/11notes/postgres:18
 ```
 
 # SOURCE 💾
-* [11notes/postgres](https://github.com/11notes/docker-POSTGRES)
+* [11notes/postgres](https://github.com/11notes/docker-postgres)
 
 # PARENT IMAGE 🏛️
 * [11notes/alpine:stable](https://hub.docker.com/r/11notes/alpine)
@@ -132,4 +135,4 @@ docker pull quay.io/11notes/postgres:17
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-postgres/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-postgres/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-postgres/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 13.10.2025, 22:22:49 (CET)*
+*created 19.11.2025, 08:50:54 (CET)*
