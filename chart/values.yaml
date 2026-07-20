@@ -1,0 +1,98 @@
+image:
+  repository: 11notes/postgres
+  tag: "18"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+nameOverride: ""
+fullnameOverride: ""
+timezone: "Europe/Zurich"
+
+postgres:
+  # ╔═════════════════════════════════════════════════════╗
+  # ║   Either set password and a k8s secret will be      ║
+  # ║   created or set an existing secret holding the     ║
+  # ║   POSTGRES_PASSWORD secret                          ║
+  # ╚═════════════════════════════════════════════════════╝
+  password: ""
+  existingSecret: ""
+  existingSecretKey: "POSTGRES_PASSWORD"
+  backupSchedule: "0 3 * * *"
+  backupRetention: 5
+
+extraEnv: []
+
+service:
+  type: ClusterIP
+  port: 5432
+  nodePort: ""
+  annotations: {}
+
+securityContext:
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+
+podSecurityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+
+resources: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+podAnnotations: {}
+podLabels: {}
+
+tmpfs:
+  run:
+    sizeLimit: ""
+  log:
+    sizeLimit: ""
+
+persistence:
+  etc:
+    enabled: true
+    existingClaim: ""
+    storageClass: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 256Mi
+  var:
+    enabled: true
+    existingClaim: ""
+    storageClass: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 32Gi
+  backup:
+    enabled: true
+    existingClaim: ""
+    storageClass: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 32Gi
+
+livenessProbe:
+  exec:
+    command:
+      - pg_isready
+      - -U
+      - postgres
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+
+readinessProbe:
+  exec:
+    command:
+      - pg_isready
+      - -U
+      - postgres
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6

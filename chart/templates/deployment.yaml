@@ -1,0 +1,123 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "postgres.fullname" . }}
+  labels:
+    {{- include "postgres.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "postgres.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "postgres.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: postgres
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          env:
+            - name: TZ
+              value: {{ .Values.timezone | quote }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "postgres.secretName" . }}
+                  key: {{ include "postgres.secretKey" . }}
+            {{- if .Values.postgres.backupSchedule }}
+            - name: POSTGRES_BACKUP_SCHEDULE
+              value: {{ .Values.postgres.backupSchedule | quote }}
+            {{- end }}
+            - name: POSTGRES_BACKUP_RETENTION
+              value: {{ .Values.postgres.backupRetention | quote }}
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          ports:
+            - name: postgres
+              containerPort: 5432
+              protocol: TCP
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            {{- if .Values.persistence.etc.enabled }}
+            - name: etc
+              mountPath: /postgres/etc
+            {{- end }}
+            {{- if .Values.persistence.var.enabled }}
+            - name: var
+              mountPath: /postgres/var
+            {{- end }}
+            {{- if .Values.persistence.backup.enabled }}
+            - name: backup
+              mountPath: /postgres/backup
+            {{- end }}
+            - name: run
+              mountPath: /postgres/run
+            - name: log
+              mountPath: /postgres/log
+      volumes:
+        {{- if .Values.persistence.etc.enabled }}
+        - name: etc
+          persistentVolumeClaim:
+            claimName: {{ include "postgres.claimName" (list . "etc") }}
+        {{- end }}
+        {{- if .Values.persistence.var.enabled }}
+        - name: var
+          persistentVolumeClaim:
+            claimName: {{ include "postgres.claimName" (list . "var") }}
+        {{- end }}
+        {{- if .Values.persistence.backup.enabled }}
+        - name: backup
+          persistentVolumeClaim:
+            claimName: {{ include "postgres.claimName" (list . "backup") }}
+        {{- end }}
+        - name: run
+          emptyDir:
+            medium: Memory
+            {{- with .Values.tmpfs.run.sizeLimit }}
+            sizeLimit: {{ . }}
+            {{- end }}
+        - name: log
+          emptyDir:
+            medium: Memory
+            {{- with .Values.tmpfs.log.sizeLimit }}
+            sizeLimit: {{ . }}
+            {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
