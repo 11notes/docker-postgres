@@ -4,6 +4,13 @@
     eleven log info "using secrets file for password"
   fi
 
+  if [ -z "$(ls -A ${APP_ROOT}/etc)" ]; then
+    eleven log info "creating new config"
+    cp -af ${APP_ROOT}/.src/etc/. ${APP_ROOT}/etc/
+  else
+   eleven log info "loading existing config"
+  fi
+
   if [ -z "$(ls -A ${APP_ROOT}/var)" ]; then
     eleven log info "creating new database"
     initdb --username=postgres --pwfile=<(printf "%s\n" "${POSTGRES_PASSWORD}") --pgdata ${APP_ROOT}/var &>/dev/null
@@ -13,7 +20,6 @@
   fi
 
   if [ -z "${1}" ]; then
-
     if [ ! -z "$(ls -A ${APP_ROOT}/sql)" ]; then
       postgres --config-file=${APP_ROOT}/etc/default.conf &> /dev/null &
       eleven log info "executing SQL scripts ..."
