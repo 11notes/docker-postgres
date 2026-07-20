@@ -809,10 +809,10 @@ jobs:
         run: |
           case "${{ matrix.registry }}" in
             "docker.io")
-              helm push "${{ runner.temp }}/helm/chart.tgz" "oci://registry-1.${{ matrix.registry }}/11notes"
+              helm push "${{ runner.temp }}/helm/chart.tgz" "oci://registry-1.${{ matrix.registry }}11notes/charts"
             ;;
             *)
-              helm push "${{ runner.temp }}/helm/chart.tgz" "oci://${{ matrix.registry }}/11notes"
+              helm push "${{ runner.temp }}/helm/chart.tgz" "oci://${{ matrix.registry }}11notes/charts"
             ;;
           esac
  
