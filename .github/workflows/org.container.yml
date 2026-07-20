@@ -812,7 +812,10 @@ jobs:
       - name: helm / push
         if: steps.helm-artifact-download.outcome == 'success'
         run: |
-          helm push "${{ runner.temp }}/helm/chart.tgz" "oci://${{ matrix.registry }}/11notes/charts"
+          case "${{ matrix.registry }}" in
+            "ghcr.io") helm push "${{ runner.temp }}/helm/chart.tgz" "oci://${{ matrix.registry }}/11notes/charts";;
+            "quay.io") helm push "${{ runner.temp }}/helm/chart.tgz" "oci://${{ matrix.registry }}/11notes/charts";;
+          esac
  
 
   # ╔═════════════════════════════════════════════════════╗
