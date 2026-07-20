@@ -1,10 +1,10 @@
 module github.com/11notes/docker-postgres/backup
 
-go 1.25.0
+go 1.26
 
 require (
   github.com/go-co-op/gocron/v2 v2.16.2
-  github.com/11notes/go v1.1.2
+  github.com/11notes/go-eleven v0.4.17
 )
 
 require (

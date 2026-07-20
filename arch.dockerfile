@@ -20,6 +20,7 @@
   FROM 11notes/go:${APP_GO_VERSION} AS build
   COPY ./build /
   ARG APP_VERSION \
+      APP_GO_VERSION \
       BUILD_ROOT \
       BUILD_BIN \
       TARGETARCH \
@@ -28,6 +29,7 @@
 
   RUN set -ex; \
     cd ${BUILD_ROOT}; \
+    go mod edit -go=${APP_GO_VERSION}; \
     eleven go build ${BUILD_BIN} main.go;
 
   RUN set -ex; \
