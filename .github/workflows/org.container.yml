@@ -327,11 +327,11 @@ jobs:
               for(const tag of docker.image.tags){
                 docker.tags.push(`${docker.image.name}:${docker.image.prefix}${tag}${docker.image.suffix}-${docker.image.platform.sanitized}`);
                 docker.tags.push(`ghcr.io/${docker.image.name}:${docker.image.prefix}${tag}${docker.image.suffix}-${docker.image.platform.sanitized}`);
-                if('${{ env.QUAY_STATUS }}' === 'operational'){
-                  core.setOutput('REGISTRY_QUAY', true);
+                if(/operational/i.test(process.env?.QUAY_STATUS)){
+                  core.setOutput('REGISTRY_QUAY', 'true');
                   docker.tags.push(`quay.io/${docker.image.name}:${docker.image.prefix}${tag}${docker.image.suffix}-${docker.image.platform.sanitized}`);
                 }else{
-                  core.setOutput('REGISTRY_QUAY', false);
+                  core.setOutput('REGISTRY_QUAY', 'false');
                 }
                 docker.merge_tags.push(`${docker.image.prefix}${tag}${docker.image.suffix}`);
               }
@@ -613,6 +613,15 @@ jobs:
           path: ${{ runner.temp }}/digests/*
           if-no-files-found: error
 
+      # UPDATE HELM CHART
+      - name: helm / update
+        if: env.WORKFLOW_BUILD == 'true' && steps.image-push.outcome == 'success' && matrix.platform == 'amd64' && hashFiles('./chart/Chart.yaml') != ''
+        uses: somaz94/helm-oci-push-action@v1
+        with:
+          charts_dir: chart
+          registry: oci://docker.io
+          registry_login: false
+
       # SET BUILD AS SUCCESSFULL
       - name: container image / success
         if: env.WORKFLOW_BUILD == 'true' && steps.image-push.outcome == 'success'
@@ -759,18 +768,6 @@ jobs:
       - name: platform merge / inspect
         run: |
           docker buildx imagetools inspect ${{ matrix.registry }}/${{ env.DOCKER_IMAGE_NAME }}:${{ steps.meta.outputs.version }}
-
-      # ╔═════════════════════════════════════════════════════╗
-      # ║                  UPDATE HELM CHART                  ║
-      # ╚═════════════════════════════════════════════════════╝
-      # UPDATE HELM CHART
-      - name: helm / update
-        if: env.GLOBAL_WORKFLOW_BUILD_SUCCESS == 'true' && hashFiles('./chart/Chart.yaml') != ''
-        uses: somaz94/helm-oci-push-action@v1
-        with:
-          charts_dir: chart
-          registry: oci://${{ matrix.registry }}
-          registry_login: false
  
 
   # ╔═════════════════════════════════════════════════════╗
