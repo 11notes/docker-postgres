@@ -1,7 +1,7 @@
 ![banner](https://raw.githubusercontent.com/11notes/static/refs/heads/master/img/banner/README.png)
 
 # POSTGRES
-![size](https://img.shields.io/badge/image_size-60MB-green?color=%2338ad2d)![5px](https://raw.githubusercontent.com/11notes/static/refs/heads/master/img/markdown/transparent5x2px.png)![pulls](https://img.shields.io/docker/pulls/11notes/postgres?color=2b75d6)![5px](https://raw.githubusercontent.com/11notes/static/refs/heads/master/img/markdown/transparent5x2px.png)[<img src="https://img.shields.io/github/issues/11notes/docker-postgres?color=7842f5">](https://github.com/11notes/docker-postgres/issues)![5px](https://raw.githubusercontent.com/11notes/static/refs/heads/master/img/markdown/transparent5x2px.png)![swiss_made](https://img.shields.io/badge/Swiss_Made-FFFFFF?labelColor=FF0000&logo=data:image/svg%2bxml;base64,PHN2ZyB2ZXJzaW9uPSIxIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDMyIDMyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0idHJhbnNwYXJlbnQiLz4KICA8cGF0aCBkPSJtMTMgNmg2djdoN3Y2aC03djdoLTZ2LTdoLTd2LTZoN3oiIGZpbGw9IiNmZmYiLz4KPC9zdmc+)
+![size](https://img.shields.io/badge/image_size-${{ image_size }}-green?color=%2338ad2d)![5px](https://raw.githubusercontent.com/11notes/static/refs/heads/master/img/markdown/transparent5x2px.png)![pulls](https://img.shields.io/docker/pulls/11notes/postgres?color=2b75d6)![5px](https://raw.githubusercontent.com/11notes/static/refs/heads/master/img/markdown/transparent5x2px.png)[<img src="https://img.shields.io/github/issues/11notes/docker-postgres?color=7842f5">](https://github.com/11notes/docker-postgres/issues)![5px](https://raw.githubusercontent.com/11notes/static/refs/heads/master/img/markdown/transparent5x2px.png)![swiss_made](https://img.shields.io/badge/Swiss_Made-FFFFFF?labelColor=FF0000&logo=data:image/svg%2bxml;base64,PHN2ZyB2ZXJzaW9uPSIxIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDMyIDMyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0idHJhbnNwYXJlbnQiLz4KICA8cGF0aCBkPSJtMTMgNmg2djdoN3Y2aC03djdoLTZ2LTdoLTd2LTZoN3oiIGZpbGw9IiNmZmYiLz4KPC9zdmc+)
 
 run PostgeSQL rootless
 
@@ -33,7 +33,6 @@ Below you find a comparison between this image and the most used or original one
 
 | **image** | **size on disk** | **init default as** | **[distroless](https://github.com/11notes/RTFM/blob/main/linux/container/image/distroless.md)** | supported architectures
 | ---: | ---: | :---: | :---: | :---: |
-| 11notes/postgres | 60MB | 1000:1000 | ❌ | amd64, arm64, armv7 |
 | postgres | 304MB | 0:0 | ❌ | 386, amd64, arm64v8, armv6, armv7, ppc64le, riscv64, s390x |
  
 # VOLUMES 📁
@@ -110,6 +109,8 @@ To find out how you can change the default UID/GID of this container image, cons
 These are the main tags for the image. There is also a tag for each commit and its shorthand sha256 value.
 
 * [18](https://hub.docker.com/r/11notes/postgres/tags?name=18)
+* [18-unraid](https://hub.docker.com/r/11notes/postgres/tags?name=18-unraid)
+* [18-nobody](https://hub.docker.com/r/11notes/postgres/tags?name=18-nobody)
 
 # REGISTRIES ☁️
 ```
@@ -117,6 +118,12 @@ docker pull 11notes/postgres:18
 docker pull ghcr.io/11notes/postgres:18
 docker pull quay.io/11notes/postgres:18
 ```
+
+# UNRAID VERSION 🟠
+This image supports unraid by default. Simply add **-unraid** to any tag and the image will run as 99:100 instead of 1000:1000.
+
+# NOBODY VERSION 👻
+This image supports nobody by default. Simply add **-nobody** to any tag and the image will run as 65534:65534 instead of 1000:1000.
 
 # SOURCE 💾
 * [11notes/postgres](https://github.com/11notes/docker-postgres)
@@ -136,4 +143,4 @@ docker pull quay.io/11notes/postgres:18
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-postgres/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-postgres/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-postgres/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 20.07.2026, 08:54:23 (CET)*
+*created 20.07.2026, 21:02:01 (CET)*
