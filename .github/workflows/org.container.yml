@@ -799,6 +799,7 @@ jobs:
           name: helm.tgz
           path: ${{ runner.temp }}/helm
 
+      # LOGIN HELM OCI
       - name: helm / login
         if: steps.helm-artifact-download.outcome == 'success'
         run: |
@@ -808,15 +809,16 @@ jobs:
             "quay.io") echo "${{ secrets.QUAY_TOKEN }}" | helm registry login quay.io -u "11notes+github" --password-stdin;;
           esac
 
+      # PUSH TO CHARTS OCI
       - name: helm / push
         if: steps.helm-artifact-download.outcome == 'success'
         run: |
           case "${{ matrix.registry }}" in
             "docker.io")
-              helm push "${{ runner.temp }}/helm/chart.tgz" "oci://registry-1.${{ matrix.registry }}11notes/charts"
+              helm push "${{ runner.temp }}/helm/chart.tgz" "oci://registry-1.${{ matrix.registry }}/11notes/charts"
             ;;
             *)
-              helm push "${{ runner.temp }}/helm/chart.tgz" "oci://${{ matrix.registry }}11notes/charts"
+              helm push "${{ runner.temp }}/helm/chart.tgz" "oci://${{ matrix.registry }}/11notes/charts"
             ;;
           esac
  
