@@ -4,7 +4,7 @@
     eleven log info "using secrets file for password"
   fi
 
-  if [ -z "$(ls -A ${APP_ROOT}/etc)" ]; then
+  if [ ! -e ${APP_ROOT}/etc/default.conf ]; then
     eleven log info "creating new config"
     cp -af ${APP_ROOT}/.src/etc/. ${APP_ROOT}/etc/
   else
