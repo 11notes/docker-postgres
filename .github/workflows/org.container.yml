@@ -482,6 +482,12 @@ jobs:
           username: 11notes+github
           password: ${{ secrets.QUAY_TOKEN }}
 
+      # HELM
+      - name: helm / setup
+        uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
+        with:
+          version: 'latest'
+
 
       # ╔═════════════════════════════════════════════════════╗
       # ║               BUILD CONTAINER IMAGE                 ║
@@ -616,11 +622,15 @@ jobs:
       # UPDATE HELM CHART
       - name: helm / update
         if: env.WORKFLOW_BUILD == 'true' && steps.image-push.outcome == 'success' && matrix.platform == 'amd64' && hashFiles('./chart/Chart.yaml') != ''
-        uses: somaz94/helm-oci-push-action@v1
+        run: |
+          helm package ./chart --version "${{ env.APP_VERSION }}" --app-version "${{ env.APP_VERSION }}" -d ${{ runner.temp }}/helm
+
+      - name: helm / upload artifact
+        if: env.WORKFLOW_BUILD == 'true' && steps.image-push.outcome == 'success' && matrix.platform == 'amd64' && hashFiles('./chart/Chart.yaml') != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          charts: ./chart
-          registry: oci://docker.io
-          registry_login: false
+          name: helm.tgz
+          path: ${{ runner.temp }}/helm
 
       # SET BUILD AS SUCCESSFULL
       - name: container image / success
@@ -744,6 +754,12 @@ jobs:
           pattern: digests-*
           merge-multiple: true
 
+      # HELM
+      - name: helm / setup
+        uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
+        with:
+          version: 'latest'
+
       # SETUP BUILDX BUILDER
       - name: platform merge / buildx
         uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
@@ -768,6 +784,34 @@ jobs:
       - name: platform merge / inspect
         run: |
           docker buildx imagetools inspect ${{ matrix.registry }}/${{ env.DOCKER_IMAGE_NAME }}:${{ steps.meta.outputs.version }}
+
+      # ╔═════════════════════════════════════════════════════╗
+      # ║                    HELM UPLOAD                      ║
+      # ╚═════════════════════════════════════════════════════╝
+      # LOAD ARTIFACT
+      - name: helm / load artifact
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: helm.tgz
+          path: ${{ runner.temp }}
+
+      - name: helm / login
+        run: |
+          echo "${{ secrets.DOCKER_TOKEN }}" | helm registry login registry-1.docker.io -u "11notes" --password-stdin
+          echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u "11notes" --password-stdin
+          echo "${{ secrets.QUAY_TOKEN }}" | helm registry login quay.io -u "11notes+github" --password-stdin
+
+      - name: helm / push
+        run: |
+          ls -lah ${{ runner.temp }}
+          case "${{ matrix.registry }}" in
+            "docker.io")
+              helm push "${{ runner.temp }}/${{ env.DOCKER_IMAGE_NAME }}-${{ steps.meta.outputs.version }}.tgz" "oci://registry-1.${{ matrix.registry }}/${{ env.DOCKER_IMAGE_NAME }}"
+            ;;
+            *)
+              helm push "$PACKAGE" "oci://${{ matrix.registry }}/${{ env.DOCKER_IMAGE_NAME }}"
+            ;;
+          esac
  
 
   # ╔═════════════════════════════════════════════════════╗
