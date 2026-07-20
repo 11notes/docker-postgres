@@ -17,8 +17,8 @@ postgres:
   password: ""
   existingSecret: ""
   existingSecretKey: "POSTGRES_PASSWORD"
-  backupSchedule: "0 3 * * *"
-  backupRetention: 5
+  backupSchedule: ""
+  backupRetention: ""
 
 extraEnv: []
 
@@ -68,7 +68,7 @@ persistence:
       - ReadWriteOnce
     size: 32Gi
   backup:
-    enabled: true
+    enabled: false
     existingClaim: ""
     storageClass: ""
     accessModes:
