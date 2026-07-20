@@ -618,7 +618,7 @@ jobs:
         if: env.WORKFLOW_BUILD == 'true' && steps.image-push.outcome == 'success' && matrix.platform == 'amd64' && hashFiles('./chart/Chart.yaml') != ''
         uses: somaz94/helm-oci-push-action@v1
         with:
-          charts_dir: chart
+          charts: ./chart
           registry: oci://docker.io
           registry_login: false
 
