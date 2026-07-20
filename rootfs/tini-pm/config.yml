@@ -8,3 +8,8 @@ services:
     fail: false
     restart: true
     bin: /usr/local/bin/backup
+
+  - name: postgres_exporter
+    fail: false
+    restart: true
+    bin: /usr/local/bin/postgres_exporter

@@ -20,6 +20,7 @@ services:
       POSTGRES_BACKUP_RETENTION: 5
     ports:
       - "5432:5432/tcp"
+      - "9090:9187/tcp"
     networks:
       frontend:
     volumes:

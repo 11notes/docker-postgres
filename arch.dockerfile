@@ -11,6 +11,7 @@
 # :: FOREIGN IMAGES
   FROM 11notes/util AS util
   FROM 11notes/distroless:tini-pm AS distroless-tini-pm
+  FROM 11notes/distroless:postgres_exporter AS distroless-postgres_exporter
 
 # ╔═════════════════════════════════════════════════════╗
 # ║                       BUILD                         ║
@@ -53,10 +54,12 @@
         APP_NAME=${APP_NAME} \
         APP_VERSION=${APP_VERSION} \
         APP_ROOT=${APP_ROOT} \
-        TINI_PM_CONFIG=/tini-pm/config.yml
+        TINI_PM_CONFIG=/tini-pm/config.yml \
+        DATA_SOURCE_URI="postgresql://postgres@127.0.0.1:5432/postgres?sslmode=disable"
 
   # :: multi-stage
     COPY --from=util / /
+    COPY --from=distroless-postgres_exporter / /
     COPY --from=distroless-tini-pm / /
     COPY --from=build /distroless/ /
     COPY ./rootfs /
