@@ -11,10 +11,7 @@
     eleven log info "loading existing config"
   fi
 
-  ls -lah ${APP_ROOT}/etc/
-  ls -lah ${APP_ROOT}/.src/etc/
-
-  if [ -z "$(ls -A ${APP_ROOT}/var)" ]; then
+  if [ ! -e ${APP_ROOT}/var/default.conf ]; then
     eleven log info "creating new database"
     initdb --username=postgres --pwfile=<(printf "%s\n" "${POSTGRES_PASSWORD}") --pgdata ${APP_ROOT}/var &>/dev/null
     ln -sf ${APP_ROOT}/etc/default.conf ${APP_ROOT}/var/postgresql.conf
