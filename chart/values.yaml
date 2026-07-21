@@ -1,4 +1,9 @@
 image:
+  # ╔═════════════════════════════════════════════════════╗
+  # ║   Since this repo contains 15, 16, 17 and 18 of     ║
+  # ║   postgres and uses the same chart for all of       ║
+  # ║   these please set the desired version via tag      ║
+  # ╚═════════════════════════════════════════════════════╝
   repository: 11notes/postgres
   tag: "18"
   pullPolicy: IfNotPresent
@@ -60,7 +65,7 @@ persistence:
     storageClass: ""
     accessModes:
       - ReadWriteOnce
-    size: 256Mi
+    size: 16Mi
   var:
     enabled: true
     existingClaim: ""
@@ -74,7 +79,7 @@ persistence:
     storageClass: ""
     accessModes:
       - ReadWriteOnce
-    size: 32Gi
+    size: 64Gi
 
 livenessProbe:
   exec:

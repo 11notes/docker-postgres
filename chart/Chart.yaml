@@ -2,8 +2,7 @@ apiVersion: v2
 name: postgres
 description: run PostgeSQL rootless on k8s
 type: application
-version: 0.0.1
-appVersion: "18"
+version: 1.0.0
 home: https://github.com/11notes/docker-postgres
 sources:
   - https://github.com/11notes/docker-postgres
