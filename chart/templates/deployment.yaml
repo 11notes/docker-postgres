@@ -48,6 +48,9 @@ spec:
                   chown -R ${TARGET_UID}:${TARGET_GID} ${VOLUME}
                   chmod 0750 -R ${VOLUME}
                 fi
+                if [ -d "${VOLUME}/lost+found" ]; then
+                  rm -rf "${VOLUME}/lost+found"
+                fi
               done
           volumeMounts:
             - name: etc
@@ -99,17 +102,14 @@ spec:
             {{- if .Values.persistence.etc.enabled }}
             - name: etc
               mountPath: /postgres/etc
-              subPath: etc
             {{- end }}
             {{- if .Values.persistence.var.enabled }}
             - name: var
               mountPath: /postgres/var
-              subPath: var
             {{- end }}
             {{- if .Values.persistence.backup.enabled }}
             - name: backup
               mountPath: /postgres/backup
-              subPath: backup
             {{- end }}
             - name: run
               mountPath: /postgres/run
