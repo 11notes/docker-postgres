@@ -9,8 +9,10 @@
     cp -af ${APP_ROOT}/.src/etc/. ${APP_ROOT}/etc/
   else
     eleven log info "loading existing config"
-    ls -lah ${APP_ROOT}/etc/
   fi
+
+  ls -lah ${APP_ROOT}/etc/
+  ls -lah ${APP_ROOT}/.src/etc/
 
   if [ -z "$(ls -A ${APP_ROOT}/var)" ]; then
     eleven log info "creating new database"
