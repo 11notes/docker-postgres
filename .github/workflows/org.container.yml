@@ -805,7 +805,6 @@ jobs:
         run: |
           case "${{ matrix.registry }}" in
             "ghcr.io") echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u "11notes" --password-stdin;;
-            "quay.io") echo "${{ secrets.QUAY_TOKEN }}" | helm registry login quay.io -u "11notes+github" --password-stdin;;
           esac
 
       # PUSH TO CHARTS OCI
@@ -814,7 +813,6 @@ jobs:
         run: |
           case "${{ matrix.registry }}" in
             "ghcr.io") helm push "${{ runner.temp }}/helm/chart.tgz" "oci://${{ matrix.registry }}/11notes/charts";;
-            "quay.io") helm push "${{ runner.temp }}/helm/chart.tgz" "oci://${{ matrix.registry }}/11notes/charts";;
           esac
  
 
