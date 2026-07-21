@@ -33,19 +33,20 @@ spec:
             - -c
             - |
               set -e
-              TARGET_UID={{ .Values.containerSecurityContext.runAsUser }}
+              TARGET_UID={{ .Values.containerSecurityContext.runAsUser | default 1000 }}
               TARGET_GID={{ .Values.containerSecurityContext.runAsGroup | default 1000 }}
 
-              for dir in /postgres/*/; do
-                dir=${dir%/}
-                [ -d "$dir" ] || continue
-                CURRENT_UID=$(stat -c '%u' "$dir")
-                CURRENT_GID=$(stat -c '%g' "$dir")
-                if [ "$CURRENT_UID" = "$TARGET_UID" ] && [ "$CURRENT_GID" = "$TARGET_GID" ]; then
-                  echo "$dir already correct ($CURRENT_UID:$CURRENT_GID), skipping"
+              for VOLUME in /postgres/*/; do
+                VOLUME=${VOLUME%/}
+                [ -d "${VOLUME}" ] || continue
+                CURRENT_UID=$(stat -c '%u' "${VOLUME}")
+                CURRENT_GID=$(stat -c '%g' "${VOLUME}")
+                if [ "$CURRENT_UID" = "${TARGET_UID}" ] && [ "$CURRENT_GID" = "${TARGET_GID}" ]; then
+                  echo "${VOLUME} already correct ($CURRENT_UID:$CURRENT_GID), skipping"
                 else
-                  echo "fixing $dir: $CURRENT_UID:$CURRENT_GID -> $TARGET_UID:$TARGET_GID"
-                  chown -R "$TARGET_UID:$TARGET_GID" "$dir"
+                  echo "fixing ${VOLUME}: $CURRENT_UID:$CURRENT_GID -> ${TARGET_UID}:${TARGET_GID}"
+                  chown -R ${TARGET_UID}:${TARGET_GID} ${VOLUME}
+                  chmod 0750 -R ${VOLUME}
                 fi
               done
           volumeMounts:
