@@ -6,7 +6,7 @@
 
   if [ -z "$(ls -A ${APP_ROOT}/etc)" ]; then
     eleven log info "creating new config"
-    cp -af ${APP_ROOT}/.src/etc/. ${APP_ROOT}/etc/
+    cp -af ${APP_ROOT}/.source/etc/. ${APP_ROOT}/etc/
   else
     eleven log info "loading existing config"
   fi
