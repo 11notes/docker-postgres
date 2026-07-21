@@ -99,14 +99,17 @@ spec:
             {{- if .Values.persistence.etc.enabled }}
             - name: etc
               mountPath: /postgres/etc
+              subPath: etc
             {{- end }}
             {{- if .Values.persistence.var.enabled }}
             - name: var
               mountPath: /postgres/var
+              subPath: var
             {{- end }}
             {{- if .Values.persistence.backup.enabled }}
             - name: backup
               mountPath: /postgres/backup
+              subPath: backup
             {{- end }}
             - name: run
               mountPath: /postgres/run
