@@ -30,7 +30,7 @@ service:
 
 podSecurityContext:
   fsGroup: 1000
-  runAsNonRoot: true
+  fsGroupChangePolicy: "OnRootMismatch"
 
 containerSecurityContext:
   runAsUser: 1000
