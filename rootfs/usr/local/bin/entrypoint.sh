@@ -4,6 +4,9 @@
     eleven log info "using secrets file for password"
   fi
 
+  ls -lah ${APP_ROOT}/etc
+  ls -lah ${APP_ROOT}/var
+
   if [ ! -e ${APP_ROOT}/etc/default.conf ]; then
     eleven log info "creating new config"
     cp -af ${APP_ROOT}/.src/etc/. ${APP_ROOT}/etc/
