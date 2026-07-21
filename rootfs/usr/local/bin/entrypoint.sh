@@ -8,7 +8,8 @@
     eleven log info "creating new config"
     cp -af ${APP_ROOT}/.src/etc/. ${APP_ROOT}/etc/
   else
-   eleven log info "loading existing config"
+    eleven log info "loading existing config"
+    ls -lah ${APP_ROOT}/etc/
   fi
 
   if [ -z "$(ls -A ${APP_ROOT}/var)" ]; then
