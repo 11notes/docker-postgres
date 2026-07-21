@@ -49,8 +49,11 @@ spec:
                   chmod 0750 -R ${VOLUME}
                 fi
                 if [ -d "${VOLUME}/lost+found" ]; then
+                  echo "removing ext lost+found folder"
                   rm -rf "${VOLUME}/lost+found"
                 fi
+                echo "actual folder permissions for ${VOLUME}:"
+                ls -lah ${VOLUME}
               done
           volumeMounts:
             - name: etc
