@@ -27,34 +27,13 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
         - name: chown
-          image: "alpine"
+          image: "11notes/k8s-init"
           command:
-            - sh
-            - -c
             - |
-              set -e
-              TARGET_UID={{ .Values.containerSecurityContext.runAsUser | default 1000 }}
-              TARGET_GID={{ .Values.containerSecurityContext.runAsGroup | default 1000 }}
-
-              for VOLUME in /postgres/*/; do
-                VOLUME=${VOLUME%/}
-                [ -d "${VOLUME}" ] || continue
-                CURRENT_UID=$(stat -c '%u' "${VOLUME}")
-                CURRENT_GID=$(stat -c '%g' "${VOLUME}")
-                if [ "$CURRENT_UID" = "${TARGET_UID}" ] && [ "$CURRENT_GID" = "${TARGET_GID}" ]; then
-                  echo "${VOLUME} already correct ($CURRENT_UID:$CURRENT_GID), skipping"
-                else
-                  echo "fixing ${VOLUME}: $CURRENT_UID:$CURRENT_GID -> ${TARGET_UID}:${TARGET_GID}"
-                  chown -R ${TARGET_UID}:${TARGET_GID} ${VOLUME}
-                  chmod 0750 -R ${VOLUME}
-                fi
-                if [ -d "${VOLUME}/lost+found" ]; then
-                  echo "removing ext lost+found folder"
-                  rm -rf "${VOLUME}/lost+found"
-                fi
-                echo "actual folder permissions for ${VOLUME}:"
-                ls -lah ${VOLUME}
-              done
+              eleven k8s \
+                chown /postgres \
+                {{ .Values.containerSecurityContext.runAsUser | default 1000 }} \
+                {{ .Values.containerSecurityContext.runAsGroup | default 1000 }}
           volumeMounts:
             - name: etc
               mountPath: /postgres/etc
