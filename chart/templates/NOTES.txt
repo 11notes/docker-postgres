@@ -1,14 +1,1 @@
-PostgreSQL ({{ .Chart.AppVersion }}) has been deployed as {{ include "postgres.fullname" . }}.
-
-Connect from within the cluster:
-
-  host: {{ include "postgres.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
-  port: {{ .Values.service.port }}
-  user: postgres
-  password: kubectl get secret {{ include "postgres.secretName" . }} -n {{ .Release.Namespace }} -o jsonpath="{.data.{{ include "postgres.secretKey" . }}}" | base64 -d
-
-Port-forward for local access:
-
-  kubectl port-forward -n {{ .Release.Namespace }} svc/{{ include "postgres.fullname" . }} 5432:{{ .Values.service.port }}
-
-Scheduled backups {{ if .Values.postgres.backupSchedule }}run on cron schedule "{{ .Values.postgres.backupSchedule }}" (container timezone {{ .Values.timezone }}), keeping the last {{ .Values.postgres.backupRetention }} backups in /postgres/backup.{{ else }}are disabled.{{ end }}
+11notes/postgres:({{ .Chart.AppVersion }}) has been deployed as {{ include "postgres.fullname" . }} to your k8s cluster, enjoy!
