@@ -30,10 +30,7 @@ spec:
           image: "11notes/k8s-init"
           command:
             - |
-              eleven k8s \
-                chown /postgres \
-                {{ .Values.containerSecurityContext.runAsUser | default 1000 }} \
-                {{ .Values.containerSecurityContext.runAsGroup | default 1000 }}
+              eleven k8s chown /postgres {{ .Values.containerSecurityContext.runAsUser | default 1000 }} {{ .Values.containerSecurityContext.runAsGroup | default 1000 }}
           volumeMounts:
             - name: etc
               mountPath: /postgres/etc

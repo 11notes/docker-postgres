@@ -51,7 +51,7 @@ resource "helm_release" "postgres" {
   repository = "oci://ghcr.io/11notes/charts"
   chart = "postgres"
   namespace  = "postgres"
-  version = 0.1.0
+  version = "1.0.0"
   create_namespace = false
 
   values = [
