@@ -28,12 +28,13 @@ spec:
       initContainers:
         - name: chown
           image: "11notes/k8s-init"
+          imagePullPolicy: Always
           command:
             - sh
             - -c
             - |
               eleven k8s chown /postgres {{ .Values.containerSecurityContext.runAsUser | default 1000 }} {{ .Values.containerSecurityContext.runAsGroup | default 1000 }}
-              eleven k8s chmod /postgres 0700
+              eleven k8s chmod /postgres 2750
           volumeMounts:
             - name: etc
               mountPath: /postgres/etc
