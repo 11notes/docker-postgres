@@ -34,7 +34,8 @@ spec:
             - -c
             - |
               eleven k8s chown /postgres {{ .Values.containerSecurityContext.runAsUser | default 1000 }} {{ .Values.containerSecurityContext.runAsGroup | default 1000 }}
-              eleven k8s chmod /postgres 2750
+              chmod 0700 -R /postgres/etc
+              chmod 0700 -R /postgres/var
           volumeMounts:
             - name: etc
               mountPath: /postgres/etc

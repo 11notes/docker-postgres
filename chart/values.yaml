@@ -34,7 +34,6 @@ service:
   annotations: {}
 
 podSecurityContext:
-  fsGroup: 1000
   fsGroupChangePolicy: "OnRootMismatch"
 
 containerSecurityContext:
