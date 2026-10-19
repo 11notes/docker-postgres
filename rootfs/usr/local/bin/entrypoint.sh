@@ -1,6 +1,6 @@
 #!/bin/ash
   if [ -f "${POSTGRES_PASSWORD_FILE}" ]; then
-    POSTGRES_PASSWORD=$(cat ${POSTGRES_PASSWORD})
+    POSTGRES_PASSWORD=$(cat "${POSTGRES_PASSWORD_FILE}")
     eleven log info "using secrets file for password"
   fi
 
